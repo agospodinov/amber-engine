@@ -1,0 +1,16 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Rendering systems
+#cmakedefine DIRECT3D_FOUND
+#cmakedefine OPENGL_FOUND
+#cmakedefine OPENGLES_FOUND
+#cmakedefine OPENGLES2_FOUND
+
+// IO
+#cmakedefine OpenCOLLADA_FOUND
+#cmakedefine JPEG_FOUND
+#cmakedefine PNG_FOUND
+#cmakedefine TIFF_FOUND
+
+#endif // CONFIG_H
