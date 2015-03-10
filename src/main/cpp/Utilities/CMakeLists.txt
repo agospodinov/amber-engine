@@ -1,4 +1,7 @@
 set(UTILITIES_LIB_SOURCES
+    ScopedDataPointer.cpp   ScopedDataPointer.h
+    Logger.cpp              Logger.h
+
     Config.h.in
     Defines.h
 )

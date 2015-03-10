@@ -1,5 +1,7 @@
 set(CORE_LIB_SOURCES
-    Game.cpp    Game.h
+    Game.cpp            Game.h
+    Player.cpp          Player.h
+    Round.cpp           Round.h
 )
 
 #include_directories()
