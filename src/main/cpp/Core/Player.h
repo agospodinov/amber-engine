@@ -9,6 +9,7 @@ namespace Amber
         {
             public:
                 Player() = default;
+                ~Player() = default;
         };
     }
 }

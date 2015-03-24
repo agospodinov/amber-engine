@@ -18,15 +18,15 @@ namespace Amber
         {
             const float distance = 1.0f;
 
-            std::vector<Vertex::Position> positions = {
-                { -distance, -distance, -distance },
-                { -distance, -distance,  distance },
-                { -distance,  distance, -distance },
-                { -distance,  distance,  distance },
-                {  distance, -distance, -distance },
-                {  distance, -distance,  distance },
-                {  distance,  distance, -distance },
-                {  distance,  distance,  distance }
+            std::vector<float> positions = {
+                -distance, -distance, -distance,
+                -distance, -distance,  distance,
+                -distance,  distance, -distance,
+                -distance,  distance,  distance,
+                 distance, -distance, -distance,
+                 distance, -distance,  distance,
+                 distance,  distance, -distance,
+                 distance,  distance,  distance
             };
 
             std::vector<std::uint32_t> indices = {
@@ -49,17 +49,18 @@ namespace Amber
                 4, 1, 5
             };
 
-            box.getVertexBuffer()->resize(positions.size() * sizeof(Vertex::Position));
-            box.getVertexBuffer()->assign(0, positions.size() * sizeof(Vertex::Position), positions.data());
+            Layout layout;
+            layout.insertAttribute(Layout::Attribute("mdl_Position", Layout::ComponentType::Float, 3));
+            box.setLayout(layout);
+
+            box.getVertexBuffer()->resize(positions.size() * sizeof(float));
+            box.getVertexBuffer()->assign(0, positions.size() * sizeof(float), positions.data());
 
             box.getIndexBuffer()->resize(indices.size() * sizeof(std::uint32_t));
             box.getIndexBuffer()->assign(0, indices.size() * sizeof(std::uint32_t), indices.data());
 
             box.setVertexCount(positions.size());
             box.setPrimitiveCount(indices.size());
-
-            std::shared_ptr<Layout> layout = std::make_shared<Layout>(Layout::getStandardLayout<Vertex::Position>());
-            box.setLayout(layout);
 
             Reference<ITexture> texture = renderer->getContext().createTexture(ITexture::Type::TextureCube);
 //            IO::ImageTextureLoader textureLoader;

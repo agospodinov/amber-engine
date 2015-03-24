@@ -7,7 +7,7 @@ namespace Amber
     namespace Rendering
     {
         // FIXME rework
-        Procedure Procedure::getDefaultProcedure(IContext &context)
+        /*Procedure Procedure::getDefaultProcedure(IContext &context)
         {
             Procedure defaultProcedure;
             Rendering::RenderStage finalRenderStage(context.getDefaultRenderTarget());
@@ -46,7 +46,7 @@ namespace Amber
             defaultProcedure.appendRenderStage(std::move(finalRenderStage));
 
             return defaultProcedure;
-        }
+        }*/
 
         std::deque<RenderStage> &Procedure::getRenderStages()
         {

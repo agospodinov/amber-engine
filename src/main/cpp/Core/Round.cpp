@@ -1,12 +1,8 @@
 #include "Round.h"
 
-Round::Round()
+namespace Amber
 {
-
+    namespace Core
+    {
+    }
 }
-
-Round::~Round()
-{
-
-}
-

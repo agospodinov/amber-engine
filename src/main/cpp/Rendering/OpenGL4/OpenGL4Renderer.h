@@ -22,7 +22,6 @@ namespace Amber
             {
                 public:
                     OpenGL4Renderer();
-                    OpenGL4Renderer(Procedure procedure);
                     virtual ~OpenGL4Renderer();
 
                     virtual void prepare(IObject &object) override final;
@@ -35,9 +34,6 @@ namespace Amber
                     virtual void render(IObject &object, Material &material) override final;
 
                     virtual void clear() override final;
-
-                    virtual Procedure &getProcedure() override final;
-                    virtual void setProcedure(Procedure procedure) override final;
 
                     virtual bool getRenderOption(RenderOption renderOption) const override final;
                     virtual void setRenderOption(RenderOption renderOption, bool enabled) override final;
@@ -55,7 +51,6 @@ namespace Amber
                     OpenGL4Context context;
                     Scene scene;
                     Viewport viewport;
-                    Procedure procedure;
             };
         }
     }

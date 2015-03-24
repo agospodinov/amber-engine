@@ -1,5 +1,6 @@
 #include "ImageTextureLoader.h"
 
+#include "Utilities/Config.h"
 #ifdef JPEG_FOUND
 
 #define int_p_NULL (int*)NULL

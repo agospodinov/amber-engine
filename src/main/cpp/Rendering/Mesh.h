@@ -32,7 +32,7 @@ namespace Amber
                 virtual Reference<IBuffer> &getIndexBuffer() override final;
                 virtual const Reference<IBuffer> &getIndexBuffer() const override final;
 
-                virtual std::shared_ptr<Layout> &getLayout() override final;
+                virtual Layout &getLayout() override final;
 
                 virtual bool isInHardwareStorage() const override final;
                 virtual void moveToHardwareStorage(IContext &context) override final;
@@ -43,7 +43,7 @@ namespace Amber
 
                 virtual const Eigen::Matrix4f &getLocalTransform() const override final;
 
-                void setLayout(std::shared_ptr<Layout> layout);
+                void setLayout(Layout layout);
 
                 void setVertexCount(std::size_t vertexCount);
                 void setPrimitiveCount(std::size_t primitiveCount);
@@ -51,7 +51,7 @@ namespace Amber
             private:
                 Reference<IBuffer> vertexBuffer;
                 Reference<IBuffer> indexBuffer;
-                std::shared_ptr<Layout> layout;
+                Layout layout;
                 std::size_t vertexCount;
                 std::size_t primitiveCount;
                 Eigen::Matrix4f localTransform;

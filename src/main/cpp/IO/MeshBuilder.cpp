@@ -1,5 +1,7 @@
 #include "MeshBuilder.h"
 
+#include <map>
+
 namespace Amber
 {
     namespace IO
@@ -11,20 +13,7 @@ namespace Amber
 
                 std::vector<std::uint32_t> reindex();
 
-                template <typename T>
                 void buildVertexArray(Rendering::Mesh &mesh) const;
-
-                template <typename T>
-                void buildPositions(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const;
-
-                template <typename T>
-                void buildNormals(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const;
-
-                template <typename T>
-                void buildColors(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const;
-
-                template <typename T>
-                void buildTexCoords(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const;
 
                 const float *positions;
                 std::size_t positionsCount;
@@ -106,7 +95,9 @@ namespace Amber
 
         Rendering::Mesh MeshBuilder::build()
         {
-            Rendering::Mesh mesh;
+            using namespace Rendering;
+
+            Mesh mesh;
 
             std::vector<std::uint32_t> indices = p->reindex();
             if (mesh.getIndexBuffer().isValid())
@@ -116,26 +107,35 @@ namespace Amber
                 indexBuffer.assign(0, indices.size() * sizeof(std::uint32_t), indices.data());
             }
 
-            if (p->positions && !p->normals && !p->colors && !p->texCoords)
+            Layout layout;
+
+            // FIXME un-hardcode
+            if (p->positions)
             {
-                p->buildVertexArray<Rendering::Vertex::Position>(mesh);
-            }
-            else if (p->positions && p->normals && !p->colors && !p->texCoords)
-            {
-                p->buildVertexArray<Rendering::Vertex::PositionNormal>(mesh);
-            }
-            else if (p->positions && p->normals && p->colors && !p->texCoords)
-            {
-                p->buildVertexArray<Rendering::Vertex::PositionNormalColor>(mesh);
-            }
-            else if (p->positions && p->normals && !p->colors && p->texCoords)
-            {
-                p->buildVertexArray<Rendering::Vertex::PositionNormalUV>(mesh);
+                layout.insertAttribute(Layout::Attribute("mdl_Position", Layout::ComponentType::Float, 3));
             }
             else
             {
-                throw std::runtime_error("Unsupported vertex type.");
+                throw std::runtime_error("Trying to build a mesh with no position array.");
             }
+
+            if (p->normals)
+            {
+                layout.insertAttribute(Layout::Attribute("mdl_Normal", Layout::ComponentType::Float, 3));
+            }
+
+            if (p->colors)
+            {
+                layout.insertAttribute(Layout::Attribute("mdl_Color", Layout::ComponentType::UInt8, 3));
+            }
+
+            if (p->texCoords)
+            {
+                layout.insertAttribute(Layout::Attribute("mdl_TexCoord", Layout::ComponentType::Float, 2));
+            }
+
+            mesh.setLayout(layout);
+            p->buildVertexArray(mesh);
 
             return mesh;
         }
@@ -197,81 +197,40 @@ namespace Amber
             return indices;
         }
 
-        template <typename T>
         void MeshBuilder::Private::buildVertexArray(Rendering::Mesh &mesh) const
         {
-            static_assert(Rendering::Vertex::IsVertexType<T>::value, "Must supply a supported vertex type.");
-
-            mesh.getVertexBuffer()->resize(indicesCount * sizeof(T));
-            Utilities::ScopedDataPointer p = mesh.getVertexBuffer()->data();
-            T *vertexArray = static_cast<T *>(p.get());
-
-            for (const auto &indexGroup : indexMap)
-            {
-                buildPositions(vertexArray, indexGroup.first, indexGroup.second);
-                buildNormals(vertexArray, indexGroup.first, indexGroup.second);
-                buildColors(vertexArray, indexGroup.first, indexGroup.second);
-                buildTexCoords(vertexArray, indexGroup.first, indexGroup.second);
-            }
-
+            mesh.getVertexBuffer()->resize(indicesCount * mesh.getLayout().getTotalStride());
             mesh.setVertexCount(indexMap.size());
             mesh.setPrimitiveCount(indicesCount);
-            mesh.setLayout(std::make_shared<Rendering::Layout>(Rendering::Layout::getStandardLayout<T>()));
-        }
 
-        template <typename T>
-        void MeshBuilder::Private::buildPositions(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-            assert(indexGroup[0] >= 0 && indexGroup[0] < positionsCount);
+            Rendering::VertexArray vertexArray(mesh.getVertexBuffer(), mesh.getLayout());
 
-            vertexArray[index].x = positions[3 * indexGroup[0] + 0];
-            vertexArray[index].y = positions[3 * indexGroup[0] + 1];
-            vertexArray[index].z = positions[3 * indexGroup[0] + 2];
-        }
+            // FIXME un-hardcode
+            Rendering::VertexComponentArray positionsArray = vertexArray.get("mdl_Position");
+            Rendering::VertexComponentArray normalsArray = vertexArray.get("mdl_Normal");
+            Rendering::VertexComponentArray colorsArray = vertexArray.get("mdl_Color");
+            Rendering::VertexComponentArray texCoordsArray = vertexArray.get("mdl_TexCoord");
 
-        template <typename T>
-        void MeshBuilder::Private::buildNormals(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-            assert(indexGroup[1] >= 0 && indexGroup[1] < normalsCount);
+            for (const auto &indices : indexMap)
+            {
+                const std::array<std::size_t, 4> &indexGroup = indices.first;
+                std::size_t finalIndex = indices.second;
 
-            vertexArray[index].nx = normals[3 * indexGroup[1] + 0];
-            vertexArray[index].ny = normals[3 * indexGroup[1] + 1];
-            vertexArray[index].nz = normals[3 * indexGroup[1] + 2];
-        }
+                positionsArray.at(finalIndex).copyFrom(positions + (3 * indexGroup[0]));
 
-        template <>
-        void MeshBuilder::Private::buildNormals(Rendering::Vertex::Position *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-        }
-
-        template <typename T>
-        void MeshBuilder::Private::buildColors(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-        }
-
-        template <>
-        void MeshBuilder::Private::buildColors(Rendering::Vertex::PositionNormalColor *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-            assert(indexGroup[2] >= 0 && indexGroup[2] < colorsCount);
-
-            vertexArray[index].r = static_cast<std::uint8_t>(colors[3 * indexGroup[2] + 0] * 255);
-            vertexArray[index].g = static_cast<std::uint8_t>(colors[3 * indexGroup[2] + 1] * 255);
-            vertexArray[index].b = static_cast<std::uint8_t>(colors[3 * indexGroup[2] + 2] * 255);
-            vertexArray[index].a = 255;
-        }
-
-        template <typename T>
-        void MeshBuilder::Private::buildTexCoords(T *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-        }
-
-        template <>
-        void MeshBuilder::Private::buildTexCoords(Rendering::Vertex::PositionNormalUV *vertexArray, const std::array<std::size_t, 4> &indexGroup, std::size_t index) const
-        {
-            assert(indexGroup[3] >= 0 && indexGroup[3] < texCoordsCount);
-
-            vertexArray[index].u = texCoords[2 * indexGroup[3] + 0];
-            vertexArray[index].v = texCoords[2 * indexGroup[3] + 1];
+                if (normals)
+                {
+                    normalsArray.at(finalIndex).copyFrom(normals + (3 * indexGroup[1]));
+                }
+                if (normals)
+                {
+                    colorsArray.at(finalIndex).copyFrom(colors + (3 * indexGroup[2]));
+                }
+                if (normals)
+                {
+                    texCoordsArray.at(finalIndex).copyFrom(texCoords + (2 * indexGroup[3]));
+                }
+            }
         }
     }
 }

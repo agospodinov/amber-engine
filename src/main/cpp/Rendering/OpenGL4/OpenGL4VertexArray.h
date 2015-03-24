@@ -35,16 +35,17 @@ namespace Amber
 
                     bool hasIndexBuffer() const;
 
-                    const std::shared_ptr<Layout> &getLayout() const;
-                    void setLayout(std::shared_ptr<Layout> layout);
+                    const Layout &getLayout() const;
+                    void setLayout(Layout layout);
 
                 private:
                     void reset(bool deleteNeeded);
+                    GLenum getGLType(Layout::ComponentType type) const;
 
                     GLuint handle;
                     Reference<OpenGL4Buffer> vertexBuffer;
                     Reference<OpenGL4Buffer> indexBuffer;
-                    std::shared_ptr<Layout> layout;
+                    Layout layout;
             };
         }
     }

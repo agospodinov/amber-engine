@@ -2,11 +2,17 @@
 #define ROUND_H
 
 
-class Round
+namespace Amber
 {
-    public:
-        Round();
-        ~Round();
-};
+    namespace Core
+    {
+        class Round
+        {
+            public:
+                Round() = default;
+                ~Round() = default;
+        };
+    }
+}
 
 #endif // ROUND_H

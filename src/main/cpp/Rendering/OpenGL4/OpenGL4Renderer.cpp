@@ -25,13 +25,6 @@ namespace Amber
         namespace GL4
         {
             OpenGL4Renderer::OpenGL4Renderer()
-                : procedure(Procedure::getDefaultProcedure(context))
-            {
-                prepare();
-            }
-
-            OpenGL4Renderer::OpenGL4Renderer(Procedure procedure)
-                : procedure(std::move(procedure))
             {
                 prepare();
             }
@@ -112,9 +105,30 @@ namespace Amber
 
             void OpenGL4Renderer::render()
             {
-                std::for_each(procedure.getRenderStages().begin(),
-                              procedure.getRenderStages().end(),
-                              std::bind(&RenderStage::render, std::placeholders::_1, this));
+                scene.getWorldNode().traverse([this](Node *node)
+                {
+                    // FIXME change naive loop to a more optimized draw loop
+                    for (const RenderStage &renderStage : node->getProcedure().getRenderStages())
+                    {
+                        BindLock renderTargetLock(renderStage.getRenderTarget().cast<IBindable>());
+
+                        if (renderStage.shouldClearBeforeRendering())
+                        {
+                            clear();
+                        }
+
+                        for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
+                        {
+                            BindLock shaderPassLock(shaderPass.getProgram().cast<IBindable>());
+
+                            Eigen::Matrix4f modelViewMatrix = scene.getCamera().getViewMatrix() * node->getTransform();
+                            shaderPass.getProgram()->setConstant("mdl_ModelView", modelViewMatrix);
+                            shaderPass.getProgram()->setConstant("mdl_Projection", scene.getCamera().getProjectionMatrix());
+
+                            node->getRenderable()->render(this);
+                        }
+                    }
+                });
             }
 
             void OpenGL4Renderer::render(IObject &object, Material &material)
@@ -151,16 +165,6 @@ namespace Amber
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             }
 
-            Procedure &OpenGL4Renderer::getProcedure()
-            {
-                return procedure;
-            }
-
-            void OpenGL4Renderer::setProcedure(Procedure procedure)
-            {
-                this->procedure = std::move(procedure);
-                prepare();
-            }
 
             bool OpenGL4Renderer::getRenderOption(IRenderer::RenderOption renderOption) const
             {
@@ -230,11 +234,12 @@ namespace Amber
                     {
                         node->getRenderable()->setup(this);
                         node->markSetup();
+
+                        std::for_each(node->getProcedure().getRenderStages().begin(),
+                                      node->getProcedure().getRenderStages().end(),
+                                      std::bind(&RenderStage::setup, std::placeholders::_1, this));
                     }
                 });
-
-                std::for_each(procedure.getRenderStages().begin(), procedure.getRenderStages().end(),
-                              std::bind(&RenderStage::setup, std::placeholders::_1, this));
             }
         }
     }

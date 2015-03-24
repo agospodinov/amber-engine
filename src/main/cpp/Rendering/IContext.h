@@ -6,16 +6,12 @@
 #include "IBuffer.h"
 #include "IShader.h"
 #include "ITexture.h"
+#include "ForwardDeclarations.h"
 
 namespace Amber
 {
     namespace Rendering
     {
-        class IBindable;
-        class IProgram;
-        class IRenderTarget;
-        template <typename ValueType> class Reference;
-
         class IContext
         {
             public:

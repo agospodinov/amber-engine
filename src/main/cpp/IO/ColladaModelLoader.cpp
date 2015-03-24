@@ -1,5 +1,6 @@
 #include "ColladaModelLoader.h"
 
+#include "Utilities/Config.h"
 #ifdef OpenCOLLADA_FOUND
 
 #include <tuple>
@@ -138,7 +139,7 @@ namespace Amber
             const COLLADAFW::FloatArray *texCoordsArray = colladaMesh->getUVCoords().getFloatValues();
 
             const COLLADAFW::MeshPrimitiveArray &primitives = colladaMesh->getMeshPrimitives();
-            log.info("Number of submeshes: " + boost::lexical_cast<std::string>(primitives.getCount()));
+            log.info("Number of submeshes: " + std::to_string(primitives.getCount()));
 
             for (std::size_t i = 0; i < primitives.getCount(); i++)
             {

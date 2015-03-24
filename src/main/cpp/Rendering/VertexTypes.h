@@ -1,98 +1,71 @@
 #ifndef VERTEXTYPES_H
 #define VERTEXTYPES_H
 
-#include <array>
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
+#include "Utilities/ScopedDataPointer.h"
+#include "IBuffer.h"
+#include "Layout.h"
+#include "Reference.h"
 
 namespace Amber
 {
     namespace Rendering
     {
-        namespace Vertex
+        class Vertex
         {
-            struct PositionNormalUV
-            {
-                    float x, y, z;
-                    float nx, ny, nz;
-                    float u, v;
-            };
+            public:
+                void copyFrom(const float *data);
+                void copyFrom(const double *data);
+                void copyFrom(const std::int8_t *data);
+                void copyFrom(const std::int16_t *data);
+                void copyFrom(const std::int32_t *data);
+                void copyFrom(const std::uint8_t *data);
+                void copyFrom(const std::uint16_t *data);
+                void copyFrom(const std::uint32_t *data);
 
-            struct PositionNormalColor
-            {
-                    float x, y, z;
-                    float nx, ny, nz;
-                    std::uint8_t r, g, b, a;
-            };
+            private:
+                friend class VertexComponentArray;
+                Vertex(std::uint8_t *vertexData, const Layout::Attribute *attribute);
 
-            struct PositionNormal
-            {
-                    float x, y, z;
-                    float nx, ny, nz;
-            };
+                template <typename InputType>
+                void optimalCopy(const InputType *inputData, Layout::ComponentType inputType);
 
-            struct Position
-            {
-                    float x, y, z;
-            };
+                template <typename InputType, typename DestinationType>
+                void transform(const InputType *data);
 
-            enum class Semantic : unsigned int
-            {
-                Coordinates = 0,
-                Normals = 1,
-                Colors = 2,
-                TextureCoordinates = 3
-            };
+                std::uint8_t *vertexData;
+                const Layout::Attribute *attribute;
+        };
 
-            constexpr std::size_t attributeOffset(Semantic attribute)
-            {
-                return /*(attribute == Semantic::Coordinates) ? offsetof(Position, x)
-                     : (attribute == Semantic::Normals) ? offsetof(PositionNormal, nx)
-                     : (attribute == Semantic::Colors) ? offsetof(PositionNormalColor, r)
-                     : (attribute == Semantic::TextureCoordinates) ? offsetof(PositionNormalUV, u)
-                     : */0;
-            }
+        class VertexComponentArray
+        {
+            public:
+                bool isValid() const;
 
-            constexpr unsigned int componentCount(Semantic attribute)
-            {
-                return /*(attribute == Semantic::Coordinates) ? 3
-                     : (attribute == Semantic::Normals) ? 3
-                     : (attribute == Semantic::Colors) ? 4
-                     : (attribute == Semantic::TextureCoordinates) ? 2
-                     : */0;
-            }
+                Vertex at(std::size_t index);
 
-            constexpr unsigned int componentStride(Semantic attribute)
-            {
-                return /*(attribute == Semantic::Coordinates) ? 4
-                     : (attribute == Semantic::Normals) ? 4
-                     : (attribute == Semantic::Colors) ? 1
-                     : (attribute == Semantic::TextureCoordinates) ? 4
-                     : */0;
-            }
+            private:
+                friend class VertexArray;
+                VertexComponentArray(std::uint8_t *subdata, const Layout::Attribute *attribute);
 
-            constexpr unsigned int componentType(Semantic attribute)
-            {
-                return /*(attribute == Semantic::Coordinates) ? GL_FLOAT
-                     : (attribute == Semantic::Normals) ? GL_FLOAT
-                     : (attribute == Semantic::Colors) ? GL_UNSIGNED_BYTE
-                     : (attribute == Semantic::TextureCoordinates) ? GL_FLOAT
-                     : */0;
-            }
+                std::uint8_t *subdata;
+                const Layout::Attribute *attribute;
 
-            template <typename T>
-            struct IsVertexType : std::integral_constant<bool,
-                    std::is_same<PositionNormalUV, typename std::remove_cv<T>::type>::value ||
-                    std::is_same<PositionNormalColor, typename std::remove_cv<T>::type>::value ||
-                    std::is_same<PositionNormal, typename std::remove_cv<T>::type>::value ||
-                    std::is_same<Position, typename std::remove_cv<T>::type>::value>
-            {
-            };
-        }
+        };
+
+        class VertexArray
+        {
+            public:
+                VertexArray(Reference<IBuffer> buffer, Layout layout);
+
+                VertexComponentArray get(const std::string &name) const;
+
+            private:
+                friend class VertexComponentArray;
+
+                Utilities::ScopedDataPointer data;
+                const Layout layout;
+        };
     }
 }
-
-#include "VertexTypes.txx"
 
 #endif // VERTEXTYPES_H

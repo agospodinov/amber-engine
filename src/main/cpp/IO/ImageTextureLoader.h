@@ -1,6 +1,7 @@
 #ifndef IMAGETEXTURELOADER_H
 #define IMAGETEXTURELOADER_H
 
+#include "Utilities/Config.h"
 #ifdef JPEG_FOUND
 
 #include "ITextureLoader.h"

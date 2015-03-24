@@ -11,90 +11,94 @@ namespace Amber
 {
     namespace Rendering
     {
-        template <>
-        Layout Layout::getStandardLayout<Vertex::Position>()
-        {
-            Layout defaultLayout;
-            *defaultLayout.attributes = {
-                { "mdl_Position",  Vertex::Semantic::Coordinates        }
-            };
-            return defaultLayout;
-        }
-
-        template <>
-        Layout Layout::getStandardLayout<Vertex::PositionNormal>()
-        {
-            Layout defaultLayout;
-            *defaultLayout.attributes = {
-                { "mdl_Position",  Vertex::Semantic::Coordinates        },
-                { "mdl_Normal",    Vertex::Semantic::Normals            }
-            };
-            return defaultLayout;
-        }
-
-        template <>
-        Layout Layout::getStandardLayout<Vertex::PositionNormalColor>()
-        {
-            Layout defaultLayout;
-            *defaultLayout.attributes = {
-                { "mdl_Position",  Vertex::Semantic::Coordinates        },
-                { "mdl_Normal",    Vertex::Semantic::Normals            },
-                { "mdl_Color",     Vertex::Semantic::Colors             }
-            };
-            return defaultLayout;
-        }
-
-        template <>
-        Layout Layout::getStandardLayout<Vertex::PositionNormalUV>()
-        {
-            Layout defaultLayout;
-            *defaultLayout.attributes = {
-                { "mdl_Position",  Vertex::Semantic::Coordinates        },
-                { "mdl_Normal",    Vertex::Semantic::Normals            },
-                { "mdl_TexCoords", Vertex::Semantic::TextureCoordinates }
-            };
-            return defaultLayout;
-        }
-
-        std::int32_t Layout::getStandardBindLocation(Vertex::Semantic semantic)
-        {
-            return static_cast<unsigned int>(semantic);
-        }
-
         Layout::Layout()
-            : attributes(std::make_shared<AttributeMap>()),
-              constants(std::make_shared<ConstantMap>())
+            : attributes(std::make_shared<AttributeList>())
         {
         }
 
-        const Layout::AttributeMap &Layout::getAttributes() const
+        const Layout::AttributeList &Layout::getAttributes() const
         {
             return *attributes;
         }
 
-        const Layout::ConstantMap &Layout::getConstants() const
+        void Layout::insertAttribute(Attribute attribute)
         {
-            return *constants;
+            attributes->push_back(attribute);
         }
 
-        void Layout::insertAttribute(std::string name, Vertex::Semantic semantic)
+        std::size_t Layout::getAttributeCount() const
         {
-            attributes->emplace(name, semantic);
+            return attributes->size();
         }
 
-        void Layout::insertConstant(std::string name, std::size_t location)
+        std::size_t Layout::getOffset(std::size_t attributeIndex) const
         {
-            constants->emplace(name, location);
+            if (attributeIndex < 0 || attributeIndex >= attributes->size())
+            {
+                throw std::out_of_range("Attribute index out of bounds");
+            }
+
+            std::size_t offset = 0;
+            for (std::size_t i = 0; i < attributeIndex; i++)
+            {
+                const Attribute &attribute = attributes->at(i);
+                offset += attribute.getCount() * attribute.getStride();
+            }
+
+            return offset;
         }
 
-        std::size_t Layout::getAttributeStride() const
+        std::size_t Layout::getTotalStride() const
         {
             std::size_t stride = 0;
-            for (const auto &attribute : *attributes)
+            for (const Attribute &attribute : *attributes)
             {
-                stride += Vertex::componentCount(attribute.second) * Vertex::componentStride(attribute.second);
+                stride += attribute.getCount() * attribute.getStride();
             }
             return stride;
+        }
+
+        Layout::Attribute::Attribute(std::string name, Layout::ComponentType type, std::size_t count)
+            : name(name),
+              type(type),
+              count(count)
+        {
+        }
+
+        const std::string &Layout::Attribute::getName() const
+        {
+            return name;
+        }
+
+        Layout::ComponentType Layout::Attribute::getType() const
+        {
+            return type;
+        }
+
+        std::size_t Layout::Attribute::getCount() const
+        {
+            return count;
+        }
+
+        std::size_t Layout::Attribute::getStride() const
+        {
+            switch (type)
+            {
+                case ComponentType::Int8:
+                case ComponentType::UInt8:
+                    return 1;
+                case ComponentType::Int16:
+                case ComponentType::UInt16:
+                    return 2;
+                case ComponentType::Int32:
+                case ComponentType::UInt32:
+                case ComponentType::Float:
+                    return 4;
+                case ComponentType::Double:
+                    return 8;
+                default:
+                    throw std::invalid_argument("Invalid component type.");
+            }
         }
     }
 }

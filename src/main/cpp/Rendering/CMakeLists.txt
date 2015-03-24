@@ -4,6 +4,7 @@ set(RENDERING_LIB_SOURCES
     Model.cpp           Model.h
     Mesh.cpp            Mesh.h
     Material.cpp        Material.h
+    Light.cpp           Light.h
     Layout.cpp          Layout.h
     Skybox.cpp          Skybox.h
 
@@ -26,7 +27,7 @@ set(RENDERING_LIB_SOURCES
     IProgram.cpp        IProgram.h
     ITexture.cpp        ITexture.h
 
-    VertexTypes.h
+    VertexTypes.cpp     VertexTypes.h
 )
 
 add_definitions("-DCOMPILING_DLL")

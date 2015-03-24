@@ -19,6 +19,11 @@ namespace Amber
         {
         }
 
+        Reference<IRenderTarget> RenderStage::getRenderTarget() const
+        {
+            return renderTarget;
+        }
+
         bool RenderStage::shouldClearBeforeRendering() const
         {
             return clearBeforeRendering;
@@ -43,17 +48,6 @@ namespace Amber
         {
             renderer->prepare(renderTarget);
             std::for_each(shaderPasses.begin(), shaderPasses.end(), std::bind(&ShaderPass::setup, std::placeholders::_1, renderer));
-        }
-
-        void RenderStage::render(IRenderer *renderer)
-        {
-            BindLock lock(renderTarget.cast<IBindable>());
-
-            if (clearBeforeRendering)
-            {
-                renderer->clear();
-            }
-            std::for_each(shaderPasses.begin(), shaderPasses.end(), std::bind(&ShaderPass::render, std::placeholders::_1, renderer));
         }
     }
 }

@@ -12,14 +12,13 @@ namespace Amber
         class Procedure
         {
             public:
-                static Procedure getDefaultProcedure(IContext &context);
-
                 Procedure() = default;
+                ~Procedure() = default;
 
-                std::deque<Rendering::RenderStage> &getRenderStages();
-                const std::deque<Rendering::RenderStage> &getRenderStages() const;
-                void prependRenderStage(Rendering::RenderStage renderStage);
-                void appendRenderStage(Rendering::RenderStage renderStage);
+                std::deque<RenderStage> &getRenderStages();
+                const std::deque<RenderStage> &getRenderStages() const;
+                void prependRenderStage(RenderStage renderStage);
+                void appendRenderStage(RenderStage renderStage);
 
             private:
                 std::deque<RenderStage> renderStages;

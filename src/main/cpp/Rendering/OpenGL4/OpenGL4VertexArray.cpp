@@ -92,29 +92,55 @@ namespace Amber
                     indexBuffer->bind();
                 }
 
-                std::size_t stride = layout->getAttributeStride();
-                for (const auto &attribute : layout->getAttributes())
+                std::size_t stride = layout.getTotalStride();
+                for (std::size_t i = 0; i < layout.getAttributes().size(); i++)
                 {
-                    const Vertex::Semantic &semantic = attribute.second;
-                    glVertexAttribPointer(Layout::getStandardBindLocation(semantic),
-                                          Vertex::componentCount(semantic),
-                                          Vertex::componentType(semantic),
-                                          (semantic == Vertex::Semantic::Colors) ? GL_TRUE : GL_FALSE,
+                    const Layout::Attribute &attribute = layout.getAttributes().at(i);
+                    glVertexAttribPointer(i, // FIXME probably not proper
+                                          attribute.getCount(),
+                                          getGLType(attribute.getType()),
+                                          GL_TRUE,
                                           stride,
-                                          reinterpret_cast<const void *>(Vertex::attributeOffset(semantic)));
-                    glEnableVertexAttribArray(Layout::getStandardBindLocation(semantic));
+                                          reinterpret_cast<const void *>(layout.getOffset(i)));
+                    glEnableVertexAttribArray(i); // FIXME probably not proper
                 }
                 unbind();
             }
 
-            const std::shared_ptr<Layout> &OpenGL4VertexArray::getLayout() const
+            GLenum OpenGL4VertexArray::getGLType(Layout::ComponentType type) const
+            {
+
+                switch (type)
+                {
+                    case Layout::ComponentType::Float:
+                        return GL_FLOAT;
+                    case Layout::ComponentType::Double:
+                        return GL_DOUBLE;
+                    case Layout::ComponentType::Int8:
+                        return GL_BYTE;
+                    case Layout::ComponentType::Int16:
+                        return GL_SHORT;
+                    case Layout::ComponentType::Int32:
+                        return GL_INT;
+                    case Layout::ComponentType::UInt8:
+                        return GL_UNSIGNED_BYTE;
+                    case Layout::ComponentType::UInt16:
+                        return GL_UNSIGNED_SHORT;
+                    case Layout::ComponentType::UInt32:
+                        return GL_UNSIGNED_INT;
+                    default:
+                        throw std::invalid_argument("Invalid component type");
+                }
+            }
+
+            const Layout &OpenGL4VertexArray::getLayout() const
             {
                 return layout;
             }
 
-            void OpenGL4VertexArray::setLayout(std::shared_ptr<Layout> layout)
+            void OpenGL4VertexArray::setLayout(Layout layout)
             {
-                bool deleteNeeded = this->layout && !this->layout->getAttributes().empty();
+                bool deleteNeeded = !this->layout.getAttributes().empty();
                 this->layout = std::move(layout);
                 reset(deleteNeeded);
             }

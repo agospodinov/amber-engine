@@ -2,11 +2,9 @@
 #define LAYOUT_H
 
 #include <cstdint>
-#include <map>
 #include <memory>
 #include <string>
-
-#include "VertexTypes.h"
+#include <vector>
 
 namespace Amber
 {
@@ -15,27 +13,56 @@ namespace Amber
         class Layout
         {
             public:
-                typedef std::map<std::string, Vertex::Semantic> AttributeMap;
-                typedef std::map<std::string, std::size_t> ConstantMap;
+                enum class ComponentType
+                {
+                    Float,
+                    Double,
+                    Int8,
+                    Int16,
+                    Int32,
+                    UInt8,
+                    UInt16,
+                    UInt32
+                };
 
-                template <typename T>
-                static Layout getStandardLayout();
-                static std::int32_t getStandardBindLocation(Vertex::Semantic semantic);
+                enum class Ordering
+                {
+                    StructureOfArrays,
+                    ArrayOfStructures
+                };
+
+                struct Attribute
+                {
+                    public:
+                        Attribute(std::string name, ComponentType type, std::size_t count);
+
+                        const std::string &getName() const;
+                        ComponentType getType() const;
+                        std::size_t getCount() const;
+                        std::size_t getStride() const;
+
+                    private:
+                        std::string name;
+                        ComponentType type;
+                        std::size_t count;
+                        std::size_t binding;
+                };
+
+                typedef std::vector<Attribute> AttributeList;
 
                 Layout();
                 ~Layout() = default;
 
-                const AttributeMap &getAttributes() const;
-                const ConstantMap &getConstants() const;
+                const AttributeList &getAttributes() const;
 
-                void insertAttribute(std::string name, Vertex::Semantic semantic);
-                void insertConstant(std::string name, std::size_t location);
+                void insertAttribute(Attribute attribute);
 
-                std::size_t getAttributeStride() const;
+                std::size_t getAttributeCount() const;
+                std::size_t getOffset(std::size_t attributeIndex) const;
+                std::size_t getTotalStride() const;
 
             private:
-                std::shared_ptr<AttributeMap> attributes;
-                std::shared_ptr<ConstantMap> constants;
+                std::shared_ptr<AttributeList> attributes;
         };
     }
 }

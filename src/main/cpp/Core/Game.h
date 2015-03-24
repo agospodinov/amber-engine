@@ -15,6 +15,7 @@ namespace Amber
         {
             public:
                 Game() = default;
+                ~Game() = default;
 
             private:
                 std::unique_ptr<Rendering::IRenderer> renderer;

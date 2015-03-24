@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "IRenderTarget.h"
+#include "Reference.h"
 #include "ShaderPass.h"
 
 #include "ForwardDeclarations.h"
@@ -16,21 +17,22 @@ namespace Amber
         {
             public:
                 RenderStage(Reference<IRenderTarget> renderTarget, bool clearBeforeRendering = true);
-                RenderStage(const RenderStage &other) = delete;
+                RenderStage(const RenderStage &other) = default;
                 RenderStage(RenderStage &&other) noexcept = default;
                 ~RenderStage() = default;
 
-                RenderStage &operator =(const RenderStage &other) = delete;
+                RenderStage &operator =(const RenderStage &other) = default;
                 RenderStage &operator =(RenderStage &&other) noexcept = default;
 
-                bool shouldClearBeforeRendering() const;
-                void setClearBeforeRendering(bool clearBeforeRendering);
+                Reference<IRenderTarget> getRenderTarget() const;
 
                 const std::vector<ShaderPass> &getShaderPasses() const;
                 void addShaderPass(ShaderPass shaderPass);
 
+                bool shouldClearBeforeRendering() const;
+                void setClearBeforeRendering(bool clearBeforeRendering);
+
                 void setup(IRenderer *renderer);
-                void render(IRenderer *renderer);
 
             private:
                 Reference<IRenderTarget> renderTarget;

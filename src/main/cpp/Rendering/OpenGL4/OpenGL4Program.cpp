@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <boost/lexical_cast.hpp>
-
 #include <GL/gl.h>
 
 #include "Utilities/Logger.h"
@@ -94,9 +92,10 @@ namespace Amber
                     }
                 }
 
-                for (const auto &attribute : layout->getAttributes())
+                const Layout::AttributeList &attributes = layout.getAttributes();
+                for (std::size_t i = 0; i < attributes.size(); i++)
                 {
-                    glBindAttribLocation(handle, Layout::getStandardBindLocation(attribute.second), attribute.first.c_str());
+                    glBindAttribLocation(handle, i, attributes.at(i).getName().c_str());
                 }
 
                 glLinkProgram(handle);
@@ -117,7 +116,7 @@ namespace Amber
                     std::string linkLogStr(linkLog.begin(), linkLog.end());
                     log.fatal(linkLogStr);
 
-                    throw std::runtime_error("Program with ID " + boost::lexical_cast<std::string>(handle) + ": linking failed!");
+                    throw std::runtime_error("Program with ID " + std::to_string(handle) + ": linking failed!");
                 }
 
                 linked = true;
@@ -146,20 +145,25 @@ namespace Amber
 
                 if (linked)
                 {
-                    throw std::logic_error("Attempting to modify a linked program");
+                    throw std::logic_error("Attempting to modify a linked program.");
                 }
 
                 glAttachShader(handle, openGlShader->handle);
                 shaders.push_back(std::move(openGlShader));
             }
 
-            const std::shared_ptr<Layout> &OpenGL4Program::getLayout() const
+            const Layout &OpenGL4Program::getLayout() const
             {
                 return layout;
             }
 
-            void OpenGL4Program::setLayout(std::shared_ptr<Layout> layout)
-            {
+            void OpenGL4Program::setLayout(Layout layout)
+            {                
+                if (linked)
+                {
+                    throw std::runtime_error("Cannot change layout; program already linked.");
+                }
+
                 this->layout = std::move(layout);
             }
 
@@ -215,14 +219,14 @@ namespace Amber
                     GLint location = glGetUniformLocation(handle, static_cast<const GLchar *>(nameData.data()));
 
                     std::string name(static_cast<char *>(nameData.data()), actualLength);
-                    layout->insertConstant(name, static_cast<std::size_t>(location));
+                    constantBindLocationsByName.emplace(name, static_cast<std::size_t>(location));
                 }
             }
 
             GLint OpenGL4Program::findConstantByName(const std::string &name)
             {
-                auto it = layout->getConstants().find(name);
-                if (it == layout->getConstants().end())
+                auto it = constantBindLocationsByName.find(name);
+                if (it == constantBindLocationsByName.end())
                 {
                     return -1;
                 }

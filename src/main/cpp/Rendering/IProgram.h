@@ -28,8 +28,8 @@ namespace Amber
 
                 virtual void addShader(Reference<IShader> shader) = 0;
 
-                virtual const std::shared_ptr<Layout> &getLayout() const = 0;
-                virtual void setLayout(std::shared_ptr<Layout> layout) = 0;
+                virtual const Layout &getLayout() const = 0;
+                virtual void setLayout(Layout layout) = 0;
 
                 virtual void setConstant(std::string name, std::int32_t value) = 0;
                 virtual void setConstant(std::string name, std::uint32_t value) = 0;

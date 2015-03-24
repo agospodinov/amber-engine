@@ -13,7 +13,7 @@ namespace Amber
         class Material
         {
             public:
-                Material();
+                Material() = default;
 
                 float getEmission() const;
                 void setEmission(float emission);

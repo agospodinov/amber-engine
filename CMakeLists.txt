@@ -48,10 +48,4 @@ elseif(APPLE)
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif(WIN32)
 
-if(ANDROID)
-    set(PLATFORM_INSTALL_DIR "Android/${ANDROID_ABI}")
-else(ANDROID)
-    set(PLATFORM_INSTALL_DIR ${CMAKE_SYSTEM_NAME})
-endif(ANDROID)
-
 add_subdirectory(src)

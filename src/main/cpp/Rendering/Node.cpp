@@ -11,8 +11,8 @@ namespace Amber
             : renderable(std::move(renderable)),
               parent(nullptr),
               localTransform(Eigen::Matrix4f::Identity()),
-              dirty(true),
-              setup(false)
+              setup(false),
+              dirty(true)
         {
         }
 
@@ -91,6 +91,21 @@ namespace Amber
             this->dirty = true;
         }
 
+        Procedure &Node::getProcedure()
+        {
+            return procedure;
+        }
+
+        const Procedure &Node::getProcedure() const
+        {
+            return procedure;
+        }
+
+        void Node::setProcedure(Procedure procedure)
+        {
+            this->procedure = std::move(procedure);
+        }
+
         bool Node::isDirty() const
         {
             if (!dirty && parent != nullptr)
@@ -113,8 +128,6 @@ namespace Amber
 
         void Node::traverse(std::function<void(Node *)> callback, Type filterType)
         {
-            Eigen::Matrix4f transform = getTransform();
-
             // World can only be root node, so don't bother traversing children
             if (filterType != Type::World)
             {
@@ -126,7 +139,7 @@ namespace Amber
 
             if (filterType == Type::Undefined || getType() == filterType)
             {
-                callback(this/*, transform*/);
+                callback(this);
             }
             this->dirty = false;
         }

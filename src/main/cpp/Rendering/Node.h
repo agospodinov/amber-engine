@@ -7,6 +7,7 @@
 #include <Eigen/Core>
 
 #include "IRenderable.h"
+#include "Procedure.h"
 #include "ForwardDeclarations.h"
 
 namespace Amber
@@ -38,10 +39,14 @@ namespace Amber
                 const Eigen::Matrix4f &getLocalTransform() const;
                 void setLocalTransform(Eigen::Matrix4f localTransform);
 
-                bool isDirty() const;
+                Procedure &getProcedure();
+                const Procedure &getProcedure() const;
+                void setProcedure(Procedure procedure);
 
                 bool isSetup() const;
                 void markSetup();
+
+                bool isDirty() const;
 
                 void traverse(std::function<void(Node *)> callback, Type filterType = Type::Undefined);
 
@@ -50,9 +55,10 @@ namespace Amber
                 const Node *parent;
                 std::vector<std::unique_ptr<Node>> children;
                 Eigen::Matrix4f localTransform;
-                mutable bool dirty;
+                Procedure procedure;
                 bool setup;
 
+                mutable bool dirty;
                 mutable Eigen::Matrix4f calculatedTransform;
         };
     }

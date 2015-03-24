@@ -1,25 +1,16 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include <eigen3/Eigen/Core>
-
 namespace Amber
 {
-    namespace Graphics
+    namespace Rendering
     {
-        namespace Rendering
+        class Light
         {
-            class Light
-            {
-                public:
-                    Light();
-
-                private:
-                    Eigen::Vector3f position;
-                    Eigen::Vector3f direction;
-                    float strength;
-            };
-        }
+            public:
+                Light() = default;
+                ~Light() = default;
+        };
     }
 }
 

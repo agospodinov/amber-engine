@@ -1,5 +1,6 @@
 #include "Mesh.h"
 
+#include "Utilities/Logger.h"
 #include "IBuffer.h"
 #include "IContext.h"
 
@@ -13,7 +14,7 @@ namespace Amber
               localTransform(Eigen::Matrix4f::Identity())
         {
             // FIXME I'd rather we didn't depend on an active context in this constructor
-            auto context = IContext::getActiveContext();
+            IContext *context = IContext::getActiveContext();
             if (context != nullptr)
             {
                 vertexBuffer = context->createHardwareBuffer(IBuffer::Type::Vertex);
@@ -41,13 +42,14 @@ namespace Amber
             return indexBuffer;
         }
 
-        std::shared_ptr<Layout> &Mesh::getLayout()
+        Layout &Mesh::getLayout()
         {
             return layout;
         }
 
         bool Mesh::isInHardwareStorage() const
         {
+            // return !vertexBuffer.cast<DeferredBuffer>().isValid();
             return vertexBuffer.cast<IBuffer>().isValid();
         }
 
@@ -55,8 +57,8 @@ namespace Amber
         {
             if (isInHardwareStorage())
             {
-                //                    Utilities::Logger log;
-                //                    log.warning("Mesh asked to move to hardware storage multiple times");
+                Utilities::Logger log;
+                log.warning("Mesh asked to move to hardware storage multiple times");
                 assert(false);
                 return;
             }
@@ -91,7 +93,7 @@ namespace Amber
             return localTransform;
         }
 
-        void Mesh::setLayout(std::shared_ptr<Layout> layout)
+        void Mesh::setLayout(Layout layout)
         {
             this->layout = std::move(layout);
         }

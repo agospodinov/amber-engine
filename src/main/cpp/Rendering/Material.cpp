@@ -4,10 +4,6 @@ namespace Amber
 {
     namespace Rendering
     {
-        Material::Material()
-        {
-        }
-
         float Material::getEmission() const
         {
             return emission;

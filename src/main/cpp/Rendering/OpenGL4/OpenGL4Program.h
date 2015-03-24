@@ -3,6 +3,7 @@
 
 #include "Rendering/IProgram.h"
 
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -41,17 +42,17 @@ namespace Amber
                     const std::vector<Reference<OpenGL4Shader>> &getShaders() const;
                     virtual void addShader(Reference<IShader> shader) override final;
 
-                    virtual const std::shared_ptr<Layout> &getLayout() const override final;
-                    virtual void setLayout(std::shared_ptr<Layout> layout) override final;
+                    virtual const Layout &getLayout() const override final;
+                    virtual void setLayout(Layout layout) override final;
 
                     virtual void setConstant(std::string name, std::int32_t value) override final;
                     virtual void setConstant(std::string name, std::uint32_t value) override final;
-                    virtual void setConstant(std::string name, float value)  override final;
+                    virtual void setConstant(std::string name, float value) override final;
 
-                    virtual void setConstant(std::string name, Eigen::Matrix4f value)  override final;
-                    virtual void setConstant(std::string name, Eigen::Vector2f value)  override final;
-                    virtual void setConstant(std::string name, Eigen::Vector3f value)  override final;
-                    virtual void setConstant(std::string name, Eigen::Vector4f value)  override final;
+                    virtual void setConstant(std::string name, Eigen::Matrix4f value) override final;
+                    virtual void setConstant(std::string name, Eigen::Vector2f value) override final;
+                    virtual void setConstant(std::string name, Eigen::Vector3f value) override final;
+                    virtual void setConstant(std::string name, Eigen::Vector4f value) override final;
 
                 private:
                     void introspect();
@@ -59,7 +60,8 @@ namespace Amber
 
                     GLuint handle;
                     std::vector<Reference<OpenGL4Shader>> shaders;
-                    std::shared_ptr<Layout> layout;
+                    Layout layout;
+                    std::map<std::string, std::uint32_t> constantBindLocationsByName;
                     bool linked;
             };
         }

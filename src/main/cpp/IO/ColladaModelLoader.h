@@ -1,6 +1,7 @@
 #ifndef COLLADAMODELLOADER_H
 #define COLLADAMODELLOADER_H
 
+#include "Utilities/Config.h"
 #ifdef OpenCOLLADA_FOUND
 
 #include "IModelLoader.h"
