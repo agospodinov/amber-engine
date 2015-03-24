@@ -63,6 +63,6 @@ namespace Amber
     }
 }
 
-#include "Reference.txx"
+#include "Rendering/Reference.txx"
 
 #endif // REFERENCE_H
