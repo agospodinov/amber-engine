@@ -30,15 +30,17 @@ namespace Amber
 
             if (index == layout.getAttributeCount())
             {
-                return VertexComponentArray(nullptr, nullptr);
+                return VertexComponentArray(nullptr, nullptr, 0);
             }
 
-            return VertexComponentArray(static_cast<std::uint8_t *>(data.get()) + layout.getOffset(index), attribute);
+            // TODO fix compiler warning
+            return VertexComponentArray(static_cast<std::uint8_t *>(data.get()) + layout.getOffset(index), attribute, layout.getTotalStride());
         }
 
-        VertexComponentArray::VertexComponentArray(uint8_t *subdata, const Layout::Attribute *attribute)
+        VertexComponentArray::VertexComponentArray(std::uint8_t *subdata, const Layout::Attribute *attribute, std::size_t totalStride)
             : subdata(subdata),
-              attribute(attribute)
+              attribute(attribute),
+              totalStride(totalStride)
         {
         }
 
@@ -49,10 +51,10 @@ namespace Amber
 
         Vertex VertexComponentArray::at(std::size_t index)
         {
-            return Vertex(subdata + index * attribute->getStride(), attribute);
+            return Vertex(subdata + index * totalStride, attribute);
         }
 
-        Vertex::Vertex(uint8_t *vertexData, const Layout::Attribute *attribute)
+        Vertex::Vertex(std::uint8_t *vertexData, const Layout::Attribute *attribute)
             : vertexData(vertexData),
               attribute(attribute)
         {

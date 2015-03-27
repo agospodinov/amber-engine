@@ -46,7 +46,6 @@ namespace Amber
 
                 private:
                     GLenum getRenderOptionId(IRenderer::RenderOption renderOption) const;
-                    void prepare();
 
                     OpenGL4Context context;
                     Scene scene;

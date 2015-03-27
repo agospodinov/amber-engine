@@ -3,6 +3,8 @@
 #include <cassert>
 #include <fstream>
 
+#include <boost/filesystem.hpp>
+
 #include "Rendering/Reference.h"
 #include "AssetManager.h"
 
@@ -42,7 +44,7 @@ namespace Amber
             for (const std::string &extension : shaderExtensions.at(shader->getType()))
             {
                 std::string path = "assets/graphics/shaders/" + language + "/" + shaderName + "." + extension;
-//                if (boost::filesystem::exists(path))
+                if (boost::filesystem::exists(path))
                 {
                     std::ifstream inputFile(path);
                     if (!inputFile.is_open())

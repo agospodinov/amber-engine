@@ -70,7 +70,7 @@ namespace Amber
 
                     virtual BindType getBindType() const;
                     virtual std::uint32_t getBindSlot() const;
-                    void setBindSlot(std::uint32_t bindSlot);
+                    virtual void setBindSlot(std::uint32_t bindSlot);
 
                     virtual Type getType() const;
                     virtual void setType(Type type);
@@ -79,7 +79,6 @@ namespace Amber
 
                 private:
                     bool isMultiSlotSupported() const;
-
 
                     GLuint handle;
                     GLType type;

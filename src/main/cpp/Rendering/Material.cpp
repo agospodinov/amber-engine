@@ -52,6 +52,10 @@ namespace Amber
         void Material::setDiffuseTexture(const Reference<ITexture> &diffuseTexture)
         {
             this->diffuseTexture = diffuseTexture;
+            if (this->diffuseTexture.isValid())
+            {
+                this->diffuseTexture->setBindSlot(0);
+            }
         }
 
         Reference<ITexture> Material::getNormalMap() const
@@ -62,6 +66,10 @@ namespace Amber
         void Material::setNormalMap(const Reference<ITexture> &normalMap)
         {
             this->normalMap = normalMap;
+            if (this->normalMap.isValid())
+            {
+                this->normalMap->setBindSlot(1);
+            }
         }
 
         Reference<ITexture> Material::getSpecularMap() const
@@ -72,6 +80,10 @@ namespace Amber
         void Material::setSpecularMap(const Reference<ITexture> &specularMap)
         {
             this->specularMap = specularMap;
+            if (this->specularMap.isValid())
+            {
+                this->specularMap->setBindSlot(2);
+            }
         }
 
         Reference<ITexture> Material::getDisplacementMap() const
@@ -82,6 +94,10 @@ namespace Amber
         void Material::setDisplacementMap(const Reference<ITexture> &displacementMap)
         {
             this->displacementMap = displacementMap;
+            if (this->displacementMap.isValid())
+            {
+                this->displacementMap->setBindSlot(3);
+            }
         }
     }
 }

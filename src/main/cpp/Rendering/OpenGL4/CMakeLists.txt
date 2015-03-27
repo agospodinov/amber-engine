@@ -10,7 +10,7 @@ set(OPENGL4_SOURCES
 )
 
 set(OPENGL4_GLSL_SOURCES
-    GLSL/Base.vsh                   GLSL/Base.fsh
+    GLSL/BaseModel.vsh              GLSL/BaseModel.fsh
     GLSL/Skybox.vsh                 GLSL/Skybox.fsh
 )
 

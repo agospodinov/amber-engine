@@ -18,7 +18,11 @@ namespace Amber
 
         Node::Type Node::getType() const
         {
-            if (dynamic_cast<Model *>(renderable.get()) != nullptr)
+            if (!hasRenderable() && !children.empty())
+            {
+                return Type::Group;
+            }
+            else if (dynamic_cast<Model *>(renderable.get()) != nullptr)
             {
                 return Type::Model;
             }
@@ -32,6 +36,11 @@ namespace Amber
             }
 
             return Type::Undefined;
+        }
+
+        bool Node::hasRenderable() const
+        {
+            return renderable != nullptr;
         }
 
         const std::unique_ptr<IRenderable> &Node::getRenderable() const
@@ -53,7 +62,7 @@ namespace Amber
         void Node::addChild(std::unique_ptr<Node> node)
         {
             Type nodeType = node->getType();
-            if (nodeType == Type::World || nodeType == Type::Undefined)
+            if (nodeType == Type::World)
             {
                 throw std::invalid_argument("Cannot parent a node of this type");
             }
@@ -77,6 +86,7 @@ namespace Amber
                 }
             }
 
+            this->dirty = false;
             return calculatedTransform;
         }
 
@@ -133,7 +143,7 @@ namespace Amber
             {
                 for (const std::unique_ptr<Node> &childNode : children)
                 {
-                    childNode->traverse(callback);
+                    childNode->traverse(callback, filterType);
                 }
             }
 
@@ -141,7 +151,6 @@ namespace Amber
             {
                 callback(this);
             }
-            this->dirty = false;
         }
     }
 }

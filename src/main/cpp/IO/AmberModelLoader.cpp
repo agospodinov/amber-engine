@@ -4,9 +4,9 @@ namespace Amber
 {
     namespace IO
     {
-        Rendering::Model AmberModelLoader::loadModel(const std::string &fileName)
+        std::unique_ptr<Rendering::Node> AmberModelLoader::loadModel(const std::string &fileName)
         {
-            return Rendering::Model();
+            return std::unique_ptr<Rendering::Node>(nullptr);
         }
     }
 }

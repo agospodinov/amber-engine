@@ -43,7 +43,8 @@ namespace Amber
                   width(width),
                   height(height),
                   depth(depth),
-                  mipMapLevels(mipMapLevels)
+                  mipMapLevels(mipMapLevels),
+                  bindSlot(0)
             {
                 glGenTextures(1, &handle);
                 bind();

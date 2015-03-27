@@ -25,6 +25,9 @@ namespace Amber
                 Model(Model &&other) noexcept = default;
                 virtual ~Model() = default;
 
+                Model &operator =(const Model &other) = delete;
+                Model &operator =(Model &&other) noexcept = default;
+
                 virtual void setup(IRenderer *renderer);
                 virtual void render(IRenderer *renderer);
 

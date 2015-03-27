@@ -93,13 +93,13 @@ namespace Amber
                 }
 
                 std::size_t stride = layout.getTotalStride();
-                for (std::size_t i = 0; i < layout.getAttributes().size(); i++)
+                for (std::size_t i = 0; i < layout.getAttributeCount(); i++)
                 {
                     const Layout::Attribute &attribute = layout.getAttributes().at(i);
                     glVertexAttribPointer(i, // FIXME probably not proper
                                           attribute.getCount(),
                                           getGLType(attribute.getType()),
-                                          GL_TRUE,
+                                          attribute.getType() != Layout::ComponentType::Float,
                                           stride,
                                           reinterpret_cast<const void *>(layout.getOffset(i)));
                     glEnableVertexAttribArray(i); // FIXME probably not proper

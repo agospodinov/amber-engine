@@ -1,14 +1,15 @@
 #ifndef IBUFFER_H
 #define IBUFFER_H
 
-#include "IBindable.h"
+#include "IMultiBindable.h"
+
 #include "Utilities/ScopedDataPointer.h"
 
 namespace Amber
 {
     namespace Rendering
     {
-        class IBuffer : public IBindable
+        class IBuffer : public IMultiBindable
         {
             public:
                 enum class Type

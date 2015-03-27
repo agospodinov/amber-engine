@@ -1,7 +1,7 @@
 #ifndef ITEXTURE_H
 #define ITEXTURE_H
 
-#include "IBindable.h"
+#include "IMultiBindable.h"
 
 #include <cstdint>
 #include <cstdlib>
@@ -10,7 +10,7 @@ namespace Amber
 {
     namespace Rendering
     {
-        class ITexture : public IBindable
+        class ITexture : public IMultiBindable
         {
             public:
                 enum class Type

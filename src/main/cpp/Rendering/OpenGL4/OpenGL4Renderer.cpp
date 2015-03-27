@@ -26,7 +26,6 @@ namespace Amber
         {
             OpenGL4Renderer::OpenGL4Renderer()
             {
-                prepare();
             }
 
             OpenGL4Renderer::~OpenGL4Renderer()
@@ -105,27 +104,47 @@ namespace Amber
 
             void OpenGL4Renderer::render()
             {
+                glDepthMask(GL_TRUE);
+                glEnable(GL_ALPHA);
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
                 scene.getWorldNode().traverse([this](Node *node)
                 {
-                    // FIXME change naive loop to a more optimized draw loop
-                    for (const RenderStage &renderStage : node->getProcedure().getRenderStages())
+
+                    if (!node->isSetup() && node->hasRenderable())
                     {
-                        BindLock renderTargetLock(renderStage.getRenderTarget().cast<IBindable>());
+                        node->getRenderable()->setup(this);
+                        std::for_each(node->getProcedure().getRenderStages().begin(),
+                                      node->getProcedure().getRenderStages().end(),
+                                      std::bind(&RenderStage::setup, std::placeholders::_1, this));
 
-                        if (renderStage.shouldClearBeforeRendering())
+                        node->markSetup();
+                    }
+
+                    if (node->hasRenderable())
+                    {
+                        // FIXME change naive loop to a more optimized draw loop
+                        for (const RenderStage &renderStage : node->getProcedure().getRenderStages())
                         {
-                            clear();
-                        }
+                            BindLock renderTargetLock(renderStage.getRenderTarget().cast<IBindable>());
 
-                        for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
-                        {
-                            BindLock shaderPassLock(shaderPass.getProgram().cast<IBindable>());
+                            if (renderStage.shouldClearBeforeRendering())
+                            {
+                                clear();
+                            }
 
-                            Eigen::Matrix4f modelViewMatrix = scene.getCamera().getViewMatrix() * node->getTransform();
-                            shaderPass.getProgram()->setConstant("mdl_ModelView", modelViewMatrix);
-                            shaderPass.getProgram()->setConstant("mdl_Projection", scene.getCamera().getProjectionMatrix());
+                            for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
+                            {
+                                BindLock shaderPassLock(shaderPass.getProgram().cast<IBindable>());
 
-                            node->getRenderable()->render(this);
+                                Eigen::Matrix4f modelViewMatrix = scene.getCamera().getViewMatrix() * node->getTransform();
+                                shaderPass.getProgram()->setConstant("mdl_ModelView", modelViewMatrix);
+                                shaderPass.getProgram()->setConstant("mdl_Projection", scene.getCamera().getProjectionMatrix());
+
+                                node->getRenderable()->render(this);
+                            }
                         }
                     }
                 });
@@ -224,22 +243,6 @@ namespace Amber
                     default:
                         throw std::runtime_error("Unsupported property.");
                 }
-            }
-
-            void OpenGL4Renderer::prepare()
-            {
-                scene.getWorldNode().traverse([this](Node *node)
-                {
-                    if (!node->isSetup())
-                    {
-                        node->getRenderable()->setup(this);
-                        node->markSetup();
-
-                        std::for_each(node->getProcedure().getRenderStages().begin(),
-                                      node->getProcedure().getRenderStages().end(),
-                                      std::bind(&RenderStage::setup, std::placeholders::_1, this));
-                    }
-                });
             }
         }
     }

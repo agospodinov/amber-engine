@@ -102,9 +102,9 @@ namespace Amber
             std::vector<std::uint32_t> indices = p->reindex();
             if (mesh.getIndexBuffer().isValid())
             {
-                Rendering::IBuffer &indexBuffer = *mesh.getIndexBuffer();
-                indexBuffer.resize(indices.size() * sizeof(std::uint32_t));
-                indexBuffer.assign(0, indices.size() * sizeof(std::uint32_t), indices.data());
+                Reference<IBuffer> &indexBuffer = mesh.getIndexBuffer();
+                indexBuffer->resize(indices.size() * sizeof(std::uint32_t));
+                indexBuffer->assign(0, indices.size() * sizeof(std::uint32_t), indices.data());
             }
 
             Layout layout;
@@ -131,7 +131,7 @@ namespace Amber
 
             if (p->texCoords)
             {
-                layout.insertAttribute(Layout::Attribute("mdl_TexCoord", Layout::ComponentType::Float, 2));
+                layout.insertAttribute(Layout::Attribute("mdl_TexCoords", Layout::ComponentType::Float, 2));
             }
 
             mesh.setLayout(layout);
@@ -209,7 +209,7 @@ namespace Amber
             Rendering::VertexComponentArray positionsArray = vertexArray.get("mdl_Position");
             Rendering::VertexComponentArray normalsArray = vertexArray.get("mdl_Normal");
             Rendering::VertexComponentArray colorsArray = vertexArray.get("mdl_Color");
-            Rendering::VertexComponentArray texCoordsArray = vertexArray.get("mdl_TexCoord");
+            Rendering::VertexComponentArray texCoordsArray = vertexArray.get("mdl_TexCoords");
 
             for (const auto &indices : indexMap)
             {
@@ -222,11 +222,11 @@ namespace Amber
                 {
                     normalsArray.at(finalIndex).copyFrom(normals + (3 * indexGroup[1]));
                 }
-                if (normals)
+                if (colors)
                 {
                     colorsArray.at(finalIndex).copyFrom(colors + (3 * indexGroup[2]));
                 }
-                if (normals)
+                if (texCoords)
                 {
                     texCoordsArray.at(finalIndex).copyFrom(texCoords + (2 * indexGroup[3]));
                 }

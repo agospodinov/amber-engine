@@ -26,6 +26,9 @@ namespace Amber
                 Mesh(Mesh &&other) = default;
                 virtual ~Mesh() = default;
 
+                Mesh &operator =(const Mesh &other) = delete;
+                Mesh &operator =(Mesh &&other) noexcept = default;
+
                 virtual Reference<IBuffer> &getVertexBuffer() override final;
                 virtual const Reference<IBuffer> &getVertexBuffer() const override final;
 

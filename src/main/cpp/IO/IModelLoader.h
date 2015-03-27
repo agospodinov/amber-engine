@@ -1,7 +1,9 @@
 #ifndef IMODELLOADER_H
 #define IMODELLOADER_H
 
-#include "Rendering/Model.h"
+#include <memory>
+
+#include "Rendering/Node.h"
 
 namespace Amber
 {
@@ -12,7 +14,7 @@ namespace Amber
             public:
                 virtual ~IModelLoader() = default;
 
-                virtual Rendering::Model loadModel(const std::string &fileName) = 0;
+                virtual std::unique_ptr<Rendering::Node> loadModel(const std::string &fileName) = 0;
         };
     }
 }

@@ -45,10 +45,11 @@ namespace Amber
 
             private:
                 friend class VertexArray;
-                VertexComponentArray(std::uint8_t *subdata, const Layout::Attribute *attribute);
+                VertexComponentArray(std::uint8_t *subdata, const Layout::Attribute *attribute, std::size_t totalStride);
 
                 std::uint8_t *subdata;
                 const Layout::Attribute *attribute;
+                std::size_t totalStride;
 
         };
 

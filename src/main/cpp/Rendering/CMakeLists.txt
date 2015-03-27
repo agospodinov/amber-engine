@@ -32,7 +32,6 @@ set(RENDERING_LIB_SOURCES
 
 add_definitions("-DCOMPILING_DLL")
 
-
 if(OPENGL_FOUND)
     add_subdirectory(OpenGL4)
 endif(OPENGL_FOUND)

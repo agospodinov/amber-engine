@@ -21,6 +21,7 @@ namespace Amber
                 {
                     Undefined,
                     World,
+                    Group,
                     Model,
                     Light
                 };
@@ -29,6 +30,7 @@ namespace Amber
 
                 Type getType() const;
 
+                bool hasRenderable() const;
                 const std::unique_ptr<IRenderable> &getRenderable() const;
                 void setRenderable(std::unique_ptr<IRenderable> renderable);
 

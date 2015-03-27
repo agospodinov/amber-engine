@@ -7,9 +7,12 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/gil/image.hpp>
-#include <boost/gil/extension/io/jpeg_io.hpp>
-#include <boost/gil/extension/io/png_io.hpp>
-#include <boost/gil/extension/io/tiff_io.hpp>
+#include <boost/gil/extension/dynamic_image/any_image.hpp>
+#include <boost/gil/extension/dynamic_image/any_image_view.hpp>
+#include <boost/gil/extension/io/jpeg_dynamic_io.hpp>
+#include <boost/gil/extension/io/png_dynamic_io.hpp>
+#include <boost/gil/extension/io/tiff_dynamic_io.hpp>
+#include <boost/mpl/vector.hpp>
 #undef int_p_NULL
 
 #include "Rendering/ITexture.h"
@@ -25,52 +28,56 @@ namespace Amber
                 { ".jpg",  ImageType::JPEG },
                 { ".jpeg", ImageType::JPEG },
                 { ".png",  ImageType::PNG  },
-                { ".tiff", ImageType::TIFF }
+                { ".tiff", ImageType::TIFF },
+                { ".tif",  ImageType::TIFF }
             };
         }
 
         void ImageTextureLoader::loadTexture(const std::string &fileName, Rendering::Reference<Rendering::ITexture> &texture)
         {
+            using namespace boost::gil;
+
             std::string path = "assets/graphics/textures/" + fileName;
-            if (boost::filesystem::exists(path))
+            if (!boost::filesystem::exists(path))
             {
-                std::string extension = boost::filesystem::extension(path);
-                boost::algorithm::to_lower(extension);
-                ImageType imageType = imageExtensions.at(extension);
-
-                boost::gil::rgb8_image_t image;
-                switch (imageType)
-                {
-                    case ImageType::JPEG:
-                        boost::gil::jpeg_read_image(path, image);
-                        break;
-                    case ImageType::PNG:
-                        boost::gil::png_read_image(path, image);
-                        break;
-                    case ImageType::TIFF:
-                        boost::gil::tiff_read_image(path, image);
-                        break;
-                    default:
-                        throw std::runtime_error("Unsupported image type.");
-                }
-
-                // FIXME total hack
-                if (texture->getType() == Rendering::ITexture::Type::TextureCube)
-                {
-                    texture->setSize(image.width(), image.height() / 6, 0);
-                }
-                else
-                {
-                    texture->setSize(image.width(), image.height(), 0);
-                }
-
-                unsigned char *data = boost::gil::interleaved_view_get_raw_data(boost::gil::view(image));
-                texture->setImageData(Rendering::ITexture::DataMode::RGB, data);
-
-                return;
+                throw std::runtime_error("Could not find texture: " + path);
             }
 
-            throw std::runtime_error("Could not find texture: " + path);
+            std::string extension = boost::filesystem::extension(path);
+            boost::algorithm::to_lower(extension);
+            ImageType imageType = imageExtensions.at(extension);
+
+            typedef boost::mpl::vector<rgba8_image_t, rgba16_image_t, rgb8_image_t, rgb16_image_t> SupportedTypes;
+            any_image<SupportedTypes> loadedImage;
+            switch (imageType)
+            {
+                case ImageType::JPEG:
+                    jpeg_read_image(path, loadedImage);
+                    break;
+                case ImageType::PNG:
+                    png_read_image(path, loadedImage);
+                    break;
+                case ImageType::TIFF:
+                    tiff_read_image(path, loadedImage);
+                    break;
+                default:
+                    throw std::runtime_error("Unsupported image type.");
+            }
+
+            // FIXME total hack
+            if (texture->getType() == Rendering::ITexture::Type::TextureCube)
+            {
+                texture->setSize(loadedImage.width(), loadedImage.height() / 6, 0);
+            }
+            else
+            {
+                texture->setSize(loadedImage.width(), loadedImage.height(), 0);
+            }
+
+            rgba8_image_t finalImage(loadedImage.dimensions());
+            copy_and_convert_pixels(const_view(loadedImage), view(finalImage));
+            const unsigned char *data = interleaved_view_get_raw_data(const_view(finalImage));
+            texture->setImageData(Rendering::ITexture::DataMode::RGBA, data);
         }
     }
 }

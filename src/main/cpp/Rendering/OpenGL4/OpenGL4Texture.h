@@ -39,7 +39,7 @@ namespace Amber
 
                     virtual BindType getBindType() const override final;
                     virtual std::uint32_t getBindSlot() const override final;
-                    void setBindSlot(std::uint32_t bindSlot);
+                    virtual void setBindSlot(std::uint32_t bindSlot) override final;
 
                     virtual std::size_t getWidth() const override final;
                     virtual std::size_t getHeight() const override final;

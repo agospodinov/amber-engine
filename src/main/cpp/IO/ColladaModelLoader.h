@@ -6,6 +6,10 @@
 
 #include "IModelLoader.h"
 
+#include <memory>
+
+#include "Rendering/Node.h"
+
 namespace Amber
 {
     namespace IO
@@ -16,7 +20,7 @@ namespace Amber
                 ColladaModelLoader() = default;
                 virtual ~ColladaModelLoader() = default;
 
-                virtual Rendering::Model loadModel(const std::string &fileName) override final;
+                virtual std::unique_ptr<Rendering::Node> loadModel(const std::string &fileName) override final;
 
             private:
                 class OCLoader;
