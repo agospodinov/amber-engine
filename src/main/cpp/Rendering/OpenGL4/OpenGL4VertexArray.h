@@ -2,6 +2,7 @@
 #define OPENGL4VERTEXARRAY_H
 
 #include "Rendering/IBindable.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <GL/gl.h>
 
@@ -16,7 +17,7 @@ namespace Amber
         {
             class OpenGL4Buffer;
 
-            class OpenGL4VertexArray : public IBindable
+            class OpenGL4VertexArray : public IBindable, public OpenGL4Object
             {
                 public:
                     OpenGL4VertexArray(Reference<OpenGL4Buffer> vertexBuffer, Reference<OpenGL4Buffer> indexBuffer);
@@ -40,9 +41,8 @@ namespace Amber
 
                 private:
                     void reset(bool deleteNeeded);
-                    GLenum getGLType(Layout::ComponentType type) const;
+                    GLenum getGLComponentType(Layout::ComponentType type) const;
 
-                    GLuint handle;
                     Reference<OpenGL4Buffer> vertexBuffer;
                     Reference<OpenGL4Buffer> indexBuffer;
                     Layout layout;

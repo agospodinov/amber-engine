@@ -21,6 +21,7 @@ set(RENDERING_LIB_SOURCES
     IObject.cpp         IObject.h
     IContext.cpp        IContext.h
     IBindable.cpp       IBindable.h
+    IMultiBindable.cpp  IMultiBindable.h
     IBuffer.cpp         IBuffer.h
     IRenderTarget.cpp   IRenderTarget.h
     IShader.cpp         IShader.h

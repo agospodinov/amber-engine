@@ -21,7 +21,7 @@ namespace Amber
             }
 
             OpenGL4Program::OpenGL4Program(OpenGL4Program &&other) noexcept
-                : handle(other.handle),
+                : OpenGL4Object(other.handle),
                   shaders(std::move(other.shaders)),
                   layout(std::move(other.layout)),
                   linked(other.linked)

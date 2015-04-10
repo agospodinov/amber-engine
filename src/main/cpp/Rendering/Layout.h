@@ -45,7 +45,6 @@ namespace Amber
                         std::string name;
                         ComponentType type;
                         std::size_t count;
-                        std::size_t binding;
                 };
 
                 typedef std::vector<Attribute> AttributeList;

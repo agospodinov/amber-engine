@@ -1,12 +1,13 @@
 set(OPENGL4_SOURCES
-    OpenGL4Renderer.cpp              OpenGL4Renderer.h
-    OpenGL4Context.cpp               OpenGL4Context.h
-    OpenGL4Buffer.cpp                OpenGL4Buffer.h
-    OpenGL4Framebuffer.cpp           OpenGL4Framebuffer.h
-    OpenGL4VertexArray.cpp           OpenGL4VertexArray.h
-    OpenGL4Program.cpp               OpenGL4Program.h
-    OpenGL4Shader.cpp                OpenGL4Shader.h
-    OpenGL4Texture.cpp               OpenGL4Texture.h
+    OpenGL4Renderer.cpp             OpenGL4Renderer.h
+    OpenGL4Context.cpp              OpenGL4Context.h
+    OpenGL4Object.cpp               OpenGL4Object.h
+    OpenGL4Buffer.cpp               OpenGL4Buffer.h
+    OpenGL4Framebuffer.cpp          OpenGL4Framebuffer.h
+    OpenGL4VertexArray.cpp          OpenGL4VertexArray.h
+    OpenGL4Program.cpp              OpenGL4Program.h
+    OpenGL4Shader.cpp               OpenGL4Shader.h
+    OpenGL4Texture.cpp              OpenGL4Texture.h
 )
 
 set(OPENGL4_GLSL_SOURCES

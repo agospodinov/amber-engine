@@ -2,6 +2,7 @@
 #define OPENGL4SHADER_H
 
 #include "Rendering/IShader.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <string>
 
@@ -13,18 +14,10 @@ namespace Amber
     {
         namespace GL4
         {
-            class OpenGL4Shader : public IShader
+            class OpenGL4Shader : public IShader, public OpenGL4Object
             {
                 public:
-                    enum class GLType : GLenum
-                    {
-                        Vertex = GL_VERTEX_SHADER,
-                        Fragment = GL_FRAGMENT_SHADER,
-                        Geometry = GL_GEOMETRY_SHADER
-                    };
-
-                    OpenGL4Shader(Type type);
-                    OpenGL4Shader(GLType type, std::string shaderSource = std::string());
+                    OpenGL4Shader(Type type, std::string shaderSource = std::string());
                     OpenGL4Shader(const OpenGL4Shader &other) = delete;
                     OpenGL4Shader(OpenGL4Shader &&other) noexcept;
                     virtual ~OpenGL4Shader();
@@ -40,15 +33,14 @@ namespace Amber
                     virtual Language getLanguage() const override final;
                     virtual Type getType() const override final;
 
-                    GLType getGLType() const;
-
                     friend bool operator==(const OpenGL4Shader &lhs, const OpenGL4Shader &rhs);
 
                 private:
                     friend class OpenGL4Program;
 
-                    GLuint handle;
-                    GLType type;
+                    GLenum getGLType(Type type) const;
+
+                    Type type;
                     bool compiled;
             };
         }

@@ -2,6 +2,7 @@
 #define OPENGL4PROGRAM_H
 
 #include "Rendering/IProgram.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <map>
 #include <memory>
@@ -19,7 +20,7 @@ namespace Amber
         {
             class OpenGL4Shader;
 
-            class OpenGL4Program : public IProgram
+            class OpenGL4Program : public IProgram, public OpenGL4Object
             {
                 public:
                     OpenGL4Program();
@@ -58,7 +59,6 @@ namespace Amber
                     void introspect();
                     GLint findConstantByName(const std::string &name);
 
-                    GLuint handle;
                     std::vector<Reference<OpenGL4Shader>> shaders;
                     Layout layout;
                     std::map<std::string, std::uint32_t> constantBindLocationsByName;

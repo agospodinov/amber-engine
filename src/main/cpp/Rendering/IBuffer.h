@@ -16,8 +16,7 @@ namespace Amber
                 {
                     Vertex,
                     Index,
-                    Constant,
-                    ImplementationDefined
+                    Constant
                 };
 
                 IBuffer() = default;

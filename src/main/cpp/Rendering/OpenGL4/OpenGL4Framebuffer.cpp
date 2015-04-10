@@ -11,21 +11,42 @@ namespace Amber
                 glGenFramebuffers(1, &handle);
             }
 
+            OpenGL4Framebuffer::OpenGL4Framebuffer(OpenGL4Framebuffer &&other) noexcept
+                : OpenGL4Object(other.handle)
+            {
+                other.handle = 0;
+            }
+
             OpenGL4Framebuffer::OpenGL4Framebuffer(int dummy)
-                : handle(0)
+                : OpenGL4Object(0)
             {
             }
 
             OpenGL4Framebuffer::~OpenGL4Framebuffer()
             {
-                glDeleteFramebuffers(1, &handle);
+                if (handle != 0)
+                {
+                    glDeleteFramebuffers(1, &handle);
+                }
+            }
+
+            OpenGL4Framebuffer &OpenGL4Framebuffer::operator =(OpenGL4Framebuffer &&other) noexcept
+            {
+                if (this != &other)
+                {
+                    handle = other.handle;
+
+                    other.handle = 0;
+                }
+
+                return *this;
             }
 
             void OpenGL4Framebuffer::attach(IRenderTarget::AttachmentType type, Reference<ITexture> texture)
             {
                 if (handle == 0)
                 {
-                    throw std::runtime_error("Cannot modify backbuffer");
+                    throw std::runtime_error("Invalid framebuffer or attempting to modify backbuffer.");
                 }
 
                 bind();

@@ -20,7 +20,7 @@ namespace Amber
             }
 
             OpenGL4VertexArray::OpenGL4VertexArray(OpenGL4VertexArray &&other) noexcept
-                : handle(other.handle),
+                : OpenGL4Object(other.handle),
                   vertexBuffer(other.vertexBuffer),
                   indexBuffer(other.indexBuffer),
                   layout(std::move(other.layout))
@@ -98,7 +98,7 @@ namespace Amber
                     const Layout::Attribute &attribute = layout.getAttributes().at(i);
                     glVertexAttribPointer(i, // FIXME probably not proper
                                           attribute.getCount(),
-                                          getGLType(attribute.getType()),
+                                          getGLComponentType(attribute.getType()),
                                           attribute.getType() != Layout::ComponentType::Float,
                                           stride,
                                           reinterpret_cast<const void *>(layout.getOffset(i)));
@@ -107,7 +107,7 @@ namespace Amber
                 unbind();
             }
 
-            GLenum OpenGL4VertexArray::getGLType(Layout::ComponentType type) const
+            GLenum OpenGL4VertexArray::getGLComponentType(Layout::ComponentType type) const
             {
 
                 switch (type)

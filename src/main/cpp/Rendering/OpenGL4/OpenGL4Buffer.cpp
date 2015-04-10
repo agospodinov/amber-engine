@@ -10,32 +10,24 @@ namespace Amber
     {
         namespace GL4
         {
-            OpenGL4Buffer::OpenGL4Buffer(IBuffer::Type type)
-                : capacity(0),
-                  usagePattern(UsagePattern::StaticDraw),
-                  bindSlot(0)
-            {
-                setType(type);
-                glGenBuffers(1, &handle);
-            }
-
-            OpenGL4Buffer::OpenGL4Buffer(GLType type, std::size_t capacity, void *data, OpenGL4Buffer::UsagePattern usagePattern)
+            OpenGL4Buffer::OpenGL4Buffer(Type type, std::size_t capacity, void *data, OpenGL4Buffer::UsagePattern usagePattern)
                 : type(type),
                   capacity(capacity),
                   usagePattern(usagePattern),
-                  bindSlot(0)
+                  bindSlot(0),
+                  bound(false)
             {
                 glGenBuffers(1, &handle);
 
                 if (capacity > 0)
                 {
                     bind();
-                    glBufferData(static_cast<GLenum>(type), capacity, data, static_cast<GLenum>(usagePattern));
+                    glBufferData(getGLType(type), capacity, data, static_cast<GLenum>(usagePattern));
                 }
             }
 
             OpenGL4Buffer::OpenGL4Buffer(OpenGL4Buffer &&other) noexcept
-                : handle(other.handle),
+                : OpenGL4Object(other.handle),
                   type(other.type),
                   capacity(other.capacity),
                   usagePattern(other.usagePattern),
@@ -87,7 +79,7 @@ namespace Amber
                 }
 
                 bind();
-                glBufferSubData(static_cast<GLenum>(type), offset, capacity, data);
+                glBufferSubData(getGLType(type), offset, capacity, data);
                 unbind();
             }
 
@@ -119,12 +111,12 @@ namespace Amber
             {
                 bind();
                 // TODO choose an appropriate access type; overload this as a const method
-                void *bufferPtr = glMapBuffer(static_cast<GLenum>(type), GL_READ_WRITE);
+                void *bufferPtr = glMapBuffer(getGLType(type), GL_READ_WRITE);
                 // FIXME this should lock the bound buffer because someone might unbind it
                 return Utilities::ScopedDataPointer(bufferPtr, [this](void *data)
                 {
                     this->bind();
-                    glUnmapBuffer(static_cast<GLenum>(this->type));
+                    glUnmapBuffer(getGLType(this->type));
                     this->unbind();
                 });
             }
@@ -149,11 +141,11 @@ namespace Amber
             {
                 if (!isMultiSlotSupported())
                 {
-                    glBindBuffer(static_cast<GLenum>(type), handle);
+                    glBindBuffer(getGLType(type), handle);
                 }
                 else
                 {
-                    glBindBufferBase(static_cast<GLenum>(type), bindSlot, handle);
+                    glBindBufferBase(getGLType(type), bindSlot, handle);
                 }
                 this->bound = true;
             }
@@ -162,11 +154,11 @@ namespace Amber
             {
                 if (!isMultiSlotSupported())
                 {
-                    glBindBuffer(static_cast<GLenum>(type), 0);
+                    glBindBuffer(getGLType(type), 0);
                 }
                 else
                 {
-                    glBindBufferBase(static_cast<GLenum>(type), bindSlot, 0);
+                    glBindBufferBase(getGLType(type), bindSlot, 0);
                 }
                 this->bound = false;
             }
@@ -198,29 +190,33 @@ namespace Amber
 
             IBuffer::Type OpenGL4Buffer::getType() const
             {
-                return type == GLType::Array ? Type::Vertex
-                     : type == GLType::Index ? Type::Index
-                     : type == GLType::Uniform ? Type::Constant
-                     : Type::ImplementationDefined;
+                return type;
             }
 
             void OpenGL4Buffer::setType(IBuffer::Type type)
             {
-                this->type = (type == Type::Vertex) ? GLType::Array
-                           : (type == Type::Index)  ? GLType::Index
-                           : (type == Type::Constant) ? GLType::Uniform
-                           : throw std::invalid_argument("Cannot explicitly set buffer type to ImplementationDefined.");
+                this->type = type;
             }
 
-            OpenGL4Buffer::GLType OpenGL4Buffer::getGLType() const
+            GLenum OpenGL4Buffer::getGLType(Type type) const
             {
-                return type;
+                switch (type)
+                {
+                    case Type::Vertex:
+                        return GL_ARRAY_BUFFER;
+                    case Type::Index:
+                        return GL_ELEMENT_ARRAY_BUFFER;
+                    case Type::Constant:
+                        return GL_UNIFORM_BUFFER;
+                    default:
+                        throw std::invalid_argument("Unsupported buffer type.");
+                }
             }
 
             bool OpenGL4Buffer::isMultiSlotSupported() const
             {
                 // Supported by OpenGL4: Uniform, TransformFeedback, AtomicCounter, ShaderStorage
-                return (type == GLType::Uniform || type == GLType::ShaderStorage);
+                return type == Type::Constant;
             }
         }
     }

@@ -21,6 +21,7 @@ namespace Amber
                 {
                     VertexShader,
                     PixelShader,
+                    GeometryShader,
                     ComputeShader,
                     TesselationShader,
                     Other

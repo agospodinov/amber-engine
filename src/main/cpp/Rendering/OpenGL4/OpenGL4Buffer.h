@@ -2,6 +2,7 @@
 #define OPENGL4BUFFER_H
 
 #include "Rendering/IBuffer.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <functional>
 #include <utility>
@@ -16,18 +17,9 @@ namespace Amber
     {
         namespace GL4
         {
-            class OpenGL4Buffer : public IBuffer
+            class OpenGL4Buffer : public IBuffer, public OpenGL4Object
             {
                 public:
-                    enum class GLType : GLenum
-                    {
-                        Array = GL_ARRAY_BUFFER,
-                        Index = GL_ELEMENT_ARRAY_BUFFER,
-                        Texture = GL_TEXTURE_BUFFER,
-                        Uniform = GL_UNIFORM_BUFFER,
-                        ShaderStorage = GL_SHADER_STORAGE_BUFFER
-                    };
-
                     enum class UsagePattern : GLenum
                     {
                         StreamDraw = GL_STREAM_DRAW,
@@ -41,8 +33,7 @@ namespace Amber
                         DynamicCopy = GL_DYNAMIC_COPY
                     };
 
-                    OpenGL4Buffer(Type type);
-                    OpenGL4Buffer(GLType type, std::size_t capacity = 0, void *data = nullptr, UsagePattern usagePattern = UsagePattern::StaticDraw);
+                    OpenGL4Buffer(Type type, std::size_t capacity = 0, void *data = nullptr, UsagePattern usagePattern = UsagePattern::StaticDraw);
                     OpenGL4Buffer(const OpenGL4Buffer &other) = delete;
                     OpenGL4Buffer(OpenGL4Buffer &&other) noexcept;
                     virtual ~OpenGL4Buffer();
@@ -75,13 +66,12 @@ namespace Amber
                     virtual Type getType() const;
                     virtual void setType(Type type);
 
-                    GLType getGLType() const;
-
                 private:
+                    GLenum getGLType(Type type) const;
+
                     bool isMultiSlotSupported() const;
 
-                    GLuint handle;
-                    GLType type;
+                    Type type;
                     std::size_t capacity;
                     UsagePattern usagePattern;
                     std::uint32_t bindSlot;

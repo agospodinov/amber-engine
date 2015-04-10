@@ -2,6 +2,7 @@
 #define OPENGL4FRAMEBUFFER_H
 
 #include "Rendering/IRenderTarget.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <cstdint>
 
@@ -13,11 +14,16 @@ namespace Amber
     {
         namespace GL4
         {
-            class OpenGL4Framebuffer : public IRenderTarget
+            class OpenGL4Framebuffer : public IRenderTarget, public OpenGL4Object
             {
                 public:
                     OpenGL4Framebuffer();
+                    OpenGL4Framebuffer(const OpenGL4Framebuffer &other) = delete;
+                    OpenGL4Framebuffer(OpenGL4Framebuffer &&other) noexcept;
                     virtual ~OpenGL4Framebuffer();
+
+                    OpenGL4Framebuffer &operator =(const OpenGL4Framebuffer &other) = delete;
+                    OpenGL4Framebuffer &operator =(OpenGL4Framebuffer &&other) noexcept;
 
                     virtual void attach(AttachmentType type, Reference<ITexture> texture) override final;
 
@@ -30,8 +36,6 @@ namespace Amber
                 private:
                     friend class OpenGL4Context;
                     OpenGL4Framebuffer(int dummy);
-
-                    GLuint handle;
             };
         }
     }

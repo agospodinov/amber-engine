@@ -2,6 +2,7 @@
 #define OPENGL4TEXTURE_H
 
 #include "Rendering/ITexture.h"
+#include "Rendering/OpenGL4/OpenGL4Object.h"
 
 #include <cstdlib>
 #include <cstdint>
@@ -14,19 +15,11 @@ namespace Amber
     {
         namespace GL4
         {
-            class OpenGL4Texture : public ITexture
+            class OpenGL4Texture : public ITexture, public OpenGL4Object
             {
                 public:
-                    enum class GLType : GLenum
-                    {
-                        Texture1D = GL_TEXTURE_1D,
-                        Texture2D = GL_TEXTURE_2D,
-                        Texture3D = GL_TEXTURE_3D,
-                        CubeMap = GL_TEXTURE_CUBE_MAP
-                    };
-
                     OpenGL4Texture(Type type);
-                    OpenGL4Texture(GLType type, std::size_t width, std::size_t height = 0, std::size_t depth = 0, std::size_t mipMapLevels = 1, const uint8_t *data = nullptr, DataMode mode = DataMode::RGBA);
+                    OpenGL4Texture(Type type, std::size_t width, std::size_t height = 0, std::size_t depth = 0, std::size_t mipMapLevels = 1, const uint8_t *data = nullptr, DataMode mode = DataMode::RGBA);
                     OpenGL4Texture(const OpenGL4Texture &other) = delete;
                     OpenGL4Texture(OpenGL4Texture &&other) noexcept;
                     virtual ~OpenGL4Texture();
@@ -54,8 +47,9 @@ namespace Amber
                     virtual void setWrapMode(WrapMode mode) override final;
 
                 private:
-                    GLuint handle;
-                    GLType type;
+                    GLenum getGLType(Type type) const;
+
+                    Type type;
                     std::size_t width;
                     std::size_t height;
                     std::size_t depth;

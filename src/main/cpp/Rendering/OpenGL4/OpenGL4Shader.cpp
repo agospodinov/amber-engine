@@ -14,40 +14,11 @@ namespace Amber
     {
         namespace GL4
         {
-            OpenGL4Shader::OpenGL4Shader(IShader::Type type)
-                : handle(0),
+            OpenGL4Shader::OpenGL4Shader(Type type, std::string shaderSource)
+                : type(type),
                   compiled(false)
             {
-                switch (type)
-                {
-                    case Type::VertexShader:
-                        this->type = GLType::Vertex;
-                        break;
-                    case Type::PixelShader:
-                        this->type = GLType::Fragment;
-                        break;
-                    default:
-                        throw std::runtime_error("Unsupported shader type.");
-                }
-
-                handle = glCreateShader(static_cast<GLenum>(this->type));
-
-                if (handle == 0)
-                {
-                    Utilities::Logger log;
-                    GLenum error = glGetError();
-
-                    log.fatal("Shader creation failed; error type: " + std::to_string(error));
-                    throw std::runtime_error("Shader could not be created!");
-                }
-            }
-
-            OpenGL4Shader::OpenGL4Shader(GLType type, std::string shaderSource)
-                : handle(0),
-                  type(type),
-                  compiled(false)
-            {
-                handle = glCreateShader(static_cast<GLenum>(type));
+                handle = glCreateShader(getGLType(type));
 
                 if (handle == 0)
                 {
@@ -65,7 +36,7 @@ namespace Amber
             }
 
             OpenGL4Shader::OpenGL4Shader(OpenGL4Shader &&other) noexcept
-                : handle(other.handle),
+                : OpenGL4Object(other.handle),
                   type(other.type),
                   compiled(other.compiled)
             {
@@ -140,25 +111,29 @@ namespace Amber
 
             IShader::Type OpenGL4Shader::getType() const
             {
-                switch (type)
-                {
-                    case GLType::Vertex:
-                        return Type::VertexShader;
-                    case GLType::Fragment:
-                        return Type::PixelShader;
-                    default:
-                        return Type::Other;
-                }
-            }
-
-            OpenGL4Shader::GLType OpenGL4Shader::getGLType() const
-            {
                 return type;
             }
 
             bool operator==(const OpenGL4Shader &lhs, const OpenGL4Shader &rhs)
             {
                 return lhs.handle == rhs.handle;
+            }
+
+            GLenum OpenGL4Shader::getGLType(Type type) const
+            {
+                switch (type)
+                {
+                    case Type::VertexShader:
+                        return GL_VERTEX_SHADER;
+                    case Type::PixelShader:
+                        return GL_FRAGMENT_SHADER;
+                    case Type::GeometryShader:
+                        return GL_GEOMETRY_SHADER;
+                    case Type::ComputeShader:
+                        return GL_COMPUTE_SHADER;
+                    default:
+                        throw std::invalid_argument("Unsupported shader type.");
+                }
             }
         }
     }

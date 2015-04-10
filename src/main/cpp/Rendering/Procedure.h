@@ -1,7 +1,7 @@
 #ifndef PROCEDURE_H
 #define PROCEDURE_H
 
-#include <deque>
+#include <vector>
 
 #include "RenderStage.h"
 
@@ -15,13 +15,13 @@ namespace Amber
                 Procedure() = default;
                 ~Procedure() = default;
 
-                std::deque<RenderStage> &getRenderStages();
-                const std::deque<RenderStage> &getRenderStages() const;
+                std::vector<RenderStage> &getRenderStages();
+                const std::vector<RenderStage> &getRenderStages() const;
                 void prependRenderStage(RenderStage renderStage);
                 void appendRenderStage(RenderStage renderStage);
 
             private:
-                std::deque<RenderStage> renderStages;
+                std::vector<RenderStage> renderStages;
         };
     }
 }

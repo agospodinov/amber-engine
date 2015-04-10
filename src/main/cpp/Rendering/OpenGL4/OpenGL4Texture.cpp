@@ -10,35 +10,18 @@ namespace Amber
         namespace GL4
         {
             OpenGL4Texture::OpenGL4Texture(ITexture::Type type)
-                : width(0),
+                : type(type),
+                  width(0),
                   height(0),
                   depth(0),
                   mipMapLevels(1),
                   bindSlot(0)
             {
-                switch (type)
-                {
-                    case Type::Texture1D:
-                        this->type = GLType::Texture1D;
-                        break;
-                    case Type::Texture2D:
-                        this->type = GLType::Texture2D;
-                        break;
-                    case Type::Texture3D:
-                        this->type = GLType::Texture3D;
-                        break;
-                    case Type::TextureCube:
-                        this->type = GLType::CubeMap;
-                        break;
-                    default:
-                        throw std::runtime_error("Unsupported type.");
-                }
-
                 glGenTextures(1, &handle);
                 bind();
             }
 
-            OpenGL4Texture::OpenGL4Texture(GLType type, std::size_t width, std::size_t height, std::size_t depth, std::size_t mipMapLevels, const std::uint8_t *data, DataMode mode)
+            OpenGL4Texture::OpenGL4Texture(Type type, std::size_t width, std::size_t height, std::size_t depth, std::size_t mipMapLevels, const std::uint8_t *data, DataMode mode)
                 : type(type),
                   width(width),
                   height(height),
@@ -61,7 +44,7 @@ namespace Amber
             }
 
             OpenGL4Texture::OpenGL4Texture(OpenGL4Texture &&other) noexcept
-                : handle(other.handle),
+                : OpenGL4Object(other.handle),
                   type(other.type),
                   width(other.width),
                   height(other.height),
@@ -99,14 +82,14 @@ namespace Amber
             void OpenGL4Texture::bind()
             {
                 glActiveTexture(GL_TEXTURE0 + bindSlot);
-                glBindTexture(static_cast<GLenum>(type), handle);
+                glBindTexture(getGLType(type), handle);
                 this->bound = true;
             }
 
             void OpenGL4Texture::unbind()
             {
                 glActiveTexture(GL_TEXTURE0 + bindSlot);
-                glBindTexture(static_cast<GLenum>(type), 0);
+                glBindTexture(getGLType(type), 0);
                 this->bound = false;
             }
 
@@ -147,19 +130,7 @@ namespace Amber
 
             ITexture::Type OpenGL4Texture::getType() const
             {
-                switch (type)
-                {
-                    case GLType::Texture1D:
-                        return Type::Texture1D;
-                    case GLType::Texture2D:
-                        return Type::Texture2D;
-                    case GLType::Texture3D:
-                        return Type::Texture3D;
-                    case GLType::CubeMap:
-                        return Type::TextureCube;
-                    default:
-                        return Type::ImplementationDefined;
-                }
+                return type;
             }
 
             void OpenGL4Texture::setSize(std::size_t width, std::size_t height, std::size_t depth)
@@ -171,27 +142,27 @@ namespace Amber
                 bind();
                 switch (type)
                 {
-                    case GLType::Texture1D:
+                    case Type::Texture1D:
                         if (!(width > 0 && height == 0 && depth == 0))
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage1D(static_cast<GLenum>(type), mipMapLevels, GL_RGBA8, width);
+                        glTexStorage1D(getGLType(type), mipMapLevels, GL_RGBA8, width);
                         break;
-                    case GLType::Texture2D:
-                    case GLType::CubeMap:
+                    case Type::Texture2D:
+                    case Type::TextureCube:
                         if (!(width > 0 && height > 0 && depth == 0))
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage2D(static_cast<GLenum>(type), mipMapLevels, GL_RGBA8, width, height);
+                        glTexStorage2D(getGLType(type), mipMapLevels, GL_RGBA8, width, height);
                         break;
-                    case GLType::Texture3D:
+                    case Type::Texture3D:
                         if (!(width > 0 && height > 0 && depth > 0))
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage3D(static_cast<GLenum>(type), mipMapLevels, GL_RGBA8, width, height, depth);
+                        glTexStorage3D(getGLType(type), mipMapLevels, GL_RGBA8, width, height, depth);
                         break;
                     default:
                         throw std::runtime_error("Unsupported texture type.");
@@ -199,7 +170,7 @@ namespace Amber
                 unbind();
             }
 
-            void OpenGL4Texture::setImageData(DataMode mode, const uint8_t *data)
+            void OpenGL4Texture::setImageData(DataMode mode, const std::uint8_t *data)
             {
                 std::size_t channels;
                 GLenum format;
@@ -236,13 +207,13 @@ namespace Amber
                 bind();
                 switch (type)
                 {
-                    case GLType::Texture1D:
-                        glTexSubImage1D(static_cast<GLenum>(type), 0, 0, width, format, GL_UNSIGNED_BYTE, data);
+                    case Type::Texture1D:
+                        glTexSubImage1D(getGLType(type), 0, 0, width, format, GL_UNSIGNED_BYTE, data);
                         break;
-                    case GLType::Texture2D:
-                        glTexSubImage2D(static_cast<GLenum>(type), 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+                    case Type::Texture2D:
+                        glTexSubImage2D(getGLType(type), 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
                         break;
-                    case GLType::CubeMap:
+                    case Type::TextureCube:
                     {
                         std::size_t stride = width * height * channels;
                         for (std::size_t side = 0; side < 6; side++)
@@ -251,14 +222,14 @@ namespace Amber
                         }
                         break;
                     }
-                    case GLType::Texture3D:
-                        glTexSubImage3D(static_cast<GLenum>(type), 0, 0, 0, 0, width, height, depth, format, GL_UNSIGNED_BYTE, data);
+                    case Type::Texture3D:
+                        glTexSubImage3D(getGLType(type), 0, 0, 0, 0, width, height, depth, format, GL_UNSIGNED_BYTE, data);
                         break;
                     default:
                         throw std::runtime_error("Unsupported texture type.");
                 }
 
-                glGenerateMipmap(static_cast<GLenum>(type));
+                glGenerateMipmap(getGLType(type));
                 unbind();
             }
 
@@ -268,12 +239,12 @@ namespace Amber
                 switch (mode)
                 {
                     case FilterMode::Nearest:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                         break;
                     case FilterMode::Linear:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                         break;
                     default:
                         throw std::runtime_error("Unsupported filter mode.");
@@ -287,26 +258,47 @@ namespace Amber
                 switch (mode)
                 {
                     case WrapMode::Repeat:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_REPEAT);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_S, GL_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_T, GL_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_R, GL_REPEAT);
                         break;
                     case WrapMode::MirroredRepeat:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
                         break;
                     case WrapMode::ClampToEdge:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
                         break;
                     case WrapMode::ClampToBorder:
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-                        glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+                        glTexParameteri(getGLType(type), GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
                         break;
                     default:
                         throw std::runtime_error("Unsupported wrap mode.");
                 }
 
                 unbind();
+            }
+
+            GLenum OpenGL4Texture::getGLType(ITexture::Type type) const
+            {
+                switch (type)
+                {
+                    case Type::Texture1D:
+                        return GL_TEXTURE_1D;
+                    case Type::Texture2D:
+                        return GL_TEXTURE_2D;
+                    case Type::Texture3D:
+                        return GL_TEXTURE_3D;
+                    case Type::TextureCube:
+                        return GL_TEXTURE_CUBE_MAP;
+                    default:
+                        throw std::invalid_argument("Unsupported texture type.");
+                }
             }
         }
     }
