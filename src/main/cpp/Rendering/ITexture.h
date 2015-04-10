@@ -38,14 +38,18 @@ namespace Amber
                     Linear
                 };
 
-                enum class DataMode
+                enum class DataFormat
                 {
-                    R,
-                    RG,
-                    RGB,
-                    RGBA,
-                    BGR,
-                    BGRA
+                    RGB8,
+                    RGB16,
+                    RGB16F,
+                    RGB32F,
+                    RGBA8,
+                    RGBA16,
+                    RGBA16F,
+                    RGBA32F,
+                    Depth32,
+                    Depth24Stencil8
                 };
 
                 ITexture() = default;
@@ -59,7 +63,7 @@ namespace Amber
 
                 virtual void setSize(std::size_t width, std::size_t height, std::size_t depth) = 0;
 
-                virtual void setImageData(DataMode mode, const std::uint8_t *data) = 0;
+                virtual void setImageData(const std::uint8_t *data) = 0;
                 virtual void setFilterMode(FilterMode mode) = 0;
                 virtual void setWrapMode(WrapMode mode) = 0;
         };

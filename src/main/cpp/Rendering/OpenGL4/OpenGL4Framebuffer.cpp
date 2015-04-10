@@ -1,5 +1,8 @@
 #include "OpenGL4Framebuffer.h"
 
+#include "Utilities/Logger.h"
+#include "OpenGL4Texture.h"
+
 namespace Amber
 {
     namespace Rendering
@@ -42,15 +45,23 @@ namespace Amber
                 return *this;
             }
 
-            void OpenGL4Framebuffer::attach(IRenderTarget::AttachmentType type, Reference<ITexture> texture)
+            void OpenGL4Framebuffer::attach(Reference<ITexture> texture, IRenderTarget::AttachmentType type, std::uint32_t index)
             {
                 if (handle == 0)
                 {
                     throw std::runtime_error("Invalid framebuffer or attempting to modify backbuffer.");
                 }
 
+                Reference<OpenGL4Texture> openGlTexture = texture.cast<OpenGL4Texture>();
+
+                if (!openGlTexture.isValid())
+                {
+                    throw std::invalid_argument("Invalid texture.");
+                }
+
+
                 bind();
-//                glFramebufferTexture(GL_FRAMEBUFFER, type, texture->getHandle(), 0);
+                glFramebufferTexture(GL_FRAMEBUFFER, getGLType(type, index), openGlTexture->getHandle(), 0);
                 unbind();
             }
 
@@ -74,6 +85,28 @@ namespace Amber
                 return 0;
             }
 
+            GLenum OpenGL4Framebuffer::getGLType(IRenderTarget::AttachmentType type, std::uint32_t index) const
+            {
+                if (type != AttachmentType::Color && index != 0)
+                {
+                    Utilities::Logger log;
+                    log.warning("Framebuffer attachment index is " + std::to_string(index) + " but type is not Color.");
+                }
+
+                switch (type)
+                {
+                    case AttachmentType::Color:
+                        return GL_COLOR_ATTACHMENT0 + index;
+                    case AttachmentType::Depth:
+                        return GL_DEPTH_ATTACHMENT;
+                    case AttachmentType::Stencil:
+                        return GL_STENCIL_ATTACHMENT;
+                    case AttachmentType::DepthStencil:
+                        return GL_DEPTH_STENCIL_ATTACHMENT;
+                    default:
+                        throw std::invalid_argument("Invalid attachment type.");
+                }
+            }
         }
     }
 }

@@ -9,20 +9,9 @@ namespace Amber
     {
         namespace GL4
         {
-            OpenGL4Texture::OpenGL4Texture(ITexture::Type type)
+            OpenGL4Texture::OpenGL4Texture(Type type, DataFormat dataFormat, std::size_t width, std::size_t height, std::size_t depth, std::size_t mipMapLevels, const std::uint8_t *data)
                 : type(type),
-                  width(0),
-                  height(0),
-                  depth(0),
-                  mipMapLevels(1),
-                  bindSlot(0)
-            {
-                glGenTextures(1, &handle);
-                bind();
-            }
-
-            OpenGL4Texture::OpenGL4Texture(Type type, std::size_t width, std::size_t height, std::size_t depth, std::size_t mipMapLevels, const std::uint8_t *data, DataMode mode)
-                : type(type),
+                  dataFormat(dataFormat),
                   width(width),
                   height(height),
                   depth(depth),
@@ -38,7 +27,7 @@ namespace Amber
 
                     if (data != nullptr)
                     {
-                        setImageData(mode, data);
+                        setImageData(data);
                     }
                 }
             }
@@ -46,6 +35,7 @@ namespace Amber
             OpenGL4Texture::OpenGL4Texture(OpenGL4Texture &&other) noexcept
                 : OpenGL4Object(other.handle),
                   type(other.type),
+                  dataFormat(other.dataFormat),
                   width(other.width),
                   height(other.height),
                   depth(other.depth),
@@ -68,6 +58,7 @@ namespace Amber
                 {
                     handle = other.handle;
                     type = other.type;
+                    dataFormat = other.dataFormat;
                     width = other.width;
                     height = other.height;
                     depth = other.depth;
@@ -147,7 +138,7 @@ namespace Amber
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage1D(getGLType(type), mipMapLevels, GL_RGBA8, width);
+                        glTexStorage1D(getGLType(type), mipMapLevels, getGLInternalFormat(dataFormat), width);
                         break;
                     case Type::Texture2D:
                     case Type::TextureCube:
@@ -155,14 +146,14 @@ namespace Amber
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage2D(getGLType(type), mipMapLevels, GL_RGBA8, width, height);
+                        glTexStorage2D(getGLType(type), mipMapLevels, getGLInternalFormat(dataFormat), width, height);
                         break;
                     case Type::Texture3D:
                         if (!(width > 0 && height > 0 && depth > 0))
                         {
                             throw std::runtime_error("Unsupported dimensions for this texture type");
                         }
-                        glTexStorage3D(getGLType(type), mipMapLevels, GL_RGBA8, width, height, depth);
+                        glTexStorage3D(getGLType(type), mipMapLevels, getGLInternalFormat(dataFormat), width, height, depth);
                         break;
                     default:
                         throw std::runtime_error("Unsupported texture type.");
@@ -170,60 +161,32 @@ namespace Amber
                 unbind();
             }
 
-            void OpenGL4Texture::setImageData(DataMode mode, const std::uint8_t *data)
+            void OpenGL4Texture::setImageData(const std::uint8_t *data)
             {
-                std::size_t channels;
-                GLenum format;
-                switch (mode)
-                {
-                    case DataMode::R:
-                        format = GL_RED;
-                        channels = 1;
-                        break;
-                    case DataMode::RG:
-                        format = GL_RG;
-                        channels = 2;
-                        break;
-                    case DataMode::RGB:
-                        format = GL_RGB;
-                        channels = 3;
-                        break;
-                    case DataMode::RGBA:
-                        format = GL_RGBA;
-                        channels = 4;
-                        break;
-                    case DataMode::BGR:
-                        format = GL_BGR;
-                        channels = 3;
-                        break;
-                    case DataMode::BGRA:
-                        format = GL_BGRA;
-                        channels = 4;
-                        break;
-                    default:
-                        throw std::runtime_error("Unsupported data type.");
-                }
+                std::size_t channels = getChannels(dataFormat);
+                GLenum format = getGLFormat(dataFormat);
+                GLenum pixelType = getGLPixelType(dataFormat);
 
                 bind();
                 switch (type)
                 {
                     case Type::Texture1D:
-                        glTexSubImage1D(getGLType(type), 0, 0, width, format, GL_UNSIGNED_BYTE, data);
+                        glTexSubImage1D(getGLType(type), 0, 0, width, format, pixelType, data);
                         break;
                     case Type::Texture2D:
-                        glTexSubImage2D(getGLType(type), 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+                        glTexSubImage2D(getGLType(type), 0, 0, 0, width, height, format, pixelType, data);
                         break;
                     case Type::TextureCube:
                     {
                         std::size_t stride = width * height * channels;
                         for (std::size_t side = 0; side < 6; side++)
                         {
-                            glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data + side * stride);
+                            glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + side, 0, 0, 0, width, height, format, pixelType, data + side * stride);
                         }
                         break;
                     }
                     case Type::Texture3D:
-                        glTexSubImage3D(getGLType(type), 0, 0, 0, 0, width, height, depth, format, GL_UNSIGNED_BYTE, data);
+                        glTexSubImage3D(getGLType(type), 0, 0, 0, 0, width, height, depth, format, pixelType, data);
                         break;
                     default:
                         throw std::runtime_error("Unsupported texture type.");
@@ -298,6 +261,104 @@ namespace Amber
                         return GL_TEXTURE_CUBE_MAP;
                     default:
                         throw std::invalid_argument("Unsupported texture type.");
+                }
+            }
+
+            GLenum OpenGL4Texture::getGLInternalFormat(ITexture::DataFormat dataFormat) const
+            {
+                switch (dataFormat)
+                {
+                    case DataFormat::RGB8:
+                        return GL_RGB8;
+                    case DataFormat::RGB16:
+                        return GL_RGB16;
+                    case DataFormat::RGB16F:
+                        return GL_RGB16F;
+                    case DataFormat::RGB32F:
+                        return GL_RGB32F;
+                    case DataFormat::RGBA8:
+                        return GL_RGBA8;
+                    case DataFormat::RGBA16:
+                        return GL_RGBA16;
+                    case DataFormat::RGBA16F:
+                        return GL_RGBA16F;
+                    case DataFormat::RGBA32F:
+                        return GL_RGBA32F;
+                    case DataFormat::Depth32:
+                        return GL_DEPTH_COMPONENT32F;
+                    case DataFormat::Depth24Stencil8:
+                        return GL_DEPTH24_STENCIL8;
+                    default:
+                        throw std::invalid_argument("Unsupported data format.");
+                }
+            }
+
+            GLenum OpenGL4Texture::getGLFormat(ITexture::DataFormat dataFormat) const
+            {
+                switch (dataFormat)
+                {
+                    case DataFormat::RGB8:
+                    case DataFormat::RGB16:
+                    case DataFormat::RGB16F:
+                    case DataFormat::RGB32F:
+                        return GL_RGB;
+                    case DataFormat::RGBA8:
+                    case DataFormat::RGBA16:
+                    case DataFormat::RGBA16F:
+                    case DataFormat::RGBA32F:
+                        return GL_RGBA;
+                    case DataFormat::Depth32:
+                        return GL_DEPTH_COMPONENT;
+                    case DataFormat::Depth24Stencil8:
+                        return GL_DEPTH_STENCIL;
+                    default:
+                        throw std::invalid_argument("Unsupported data format.");
+                }
+            }
+
+            GLenum OpenGL4Texture::getGLPixelType(ITexture::DataFormat dataFormat) const
+            {
+                switch (dataFormat)
+                {
+                    case DataFormat::RGB8:
+                    case DataFormat::RGBA8:
+                        return GL_UNSIGNED_BYTE;
+                    case DataFormat::RGB16:
+                    case DataFormat::RGBA16:
+                        return GL_UNSIGNED_SHORT;
+                    case DataFormat::RGB16F:
+                    case DataFormat::RGBA16F:
+                    case DataFormat::RGB32F:
+                    case DataFormat::RGBA32F:
+                    case DataFormat::Depth32:
+                        return GL_FLOAT;
+                    case DataFormat::Depth24Stencil8:
+                        return GL_UNSIGNED_INT_24_8;
+                    default:
+                        throw std::invalid_argument("Unsupported data format.");
+                }
+            }
+
+            std::size_t OpenGL4Texture::getChannels(ITexture::DataFormat dataFormat) const
+            {
+                switch (dataFormat)
+                {
+                    case DataFormat::RGB8:
+                    case DataFormat::RGB16:
+                    case DataFormat::RGB16F:
+                    case DataFormat::RGB32F:
+                        return 3;
+                    case DataFormat::RGBA8:
+                    case DataFormat::RGBA16:
+                    case DataFormat::RGBA16F:
+                    case DataFormat::RGBA32F:
+                        return 4;
+                    case DataFormat::Depth32:
+                        return 1;
+                    case DataFormat::Depth24Stencil8:
+                        return 2;
+                    default:
+                        throw std::invalid_argument("Unsupported data format.");
                 }
             }
         }

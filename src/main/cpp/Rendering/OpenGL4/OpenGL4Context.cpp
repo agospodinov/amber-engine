@@ -187,9 +187,9 @@ namespace Amber
                 return Reference<IProgram>(this, p->programs.back().get());
             }
 
-            Reference<ITexture> OpenGL4Context::createTexture(ITexture::Type type)
+            Reference<ITexture> OpenGL4Context::createTexture(ITexture::Type type, ITexture::DataFormat dataFormat)
             {
-                p->textures.emplace_back(new OpenGL4Texture(type));
+                p->textures.emplace_back(new OpenGL4Texture(type, dataFormat));
                 return Reference<ITexture>(this, p->textures.back().get());
             }
 

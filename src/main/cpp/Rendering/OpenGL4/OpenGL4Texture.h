@@ -18,8 +18,7 @@ namespace Amber
             class OpenGL4Texture : public ITexture, public OpenGL4Object
             {
                 public:
-                    OpenGL4Texture(Type type);
-                    OpenGL4Texture(Type type, std::size_t width, std::size_t height = 0, std::size_t depth = 0, std::size_t mipMapLevels = 1, const uint8_t *data = nullptr, DataMode mode = DataMode::RGBA);
+                    OpenGL4Texture(Type type, DataFormat dataFormat, std::size_t width = 0, std::size_t height = 0, std::size_t depth = 0, std::size_t mipMapLevels = 1, const uint8_t *data = nullptr);
                     OpenGL4Texture(const OpenGL4Texture &other) = delete;
                     OpenGL4Texture(OpenGL4Texture &&other) noexcept;
                     virtual ~OpenGL4Texture();
@@ -42,14 +41,19 @@ namespace Amber
 
                     virtual void setSize(std::size_t width = 0, std::size_t height = 0, std::size_t depth = 0) override final;
 
-                    virtual void setImageData(DataMode mode, const uint8_t *data) override final;
+                    virtual void setImageData(const uint8_t *data) override final;
                     virtual void setFilterMode(FilterMode mode) override final;
                     virtual void setWrapMode(WrapMode mode) override final;
 
                 private:
                     GLenum getGLType(Type type) const;
+                    GLenum getGLInternalFormat(DataFormat format) const;
+                    GLenum getGLFormat(DataFormat format) const;
+                    GLenum getGLPixelType(DataFormat dataFormat) const;
+                    std::size_t getChannels(DataFormat dataFormat) const;
 
                     Type type;
+                    DataFormat dataFormat;
                     std::size_t width;
                     std::size_t height;
                     std::size_t depth;

@@ -35,7 +35,7 @@ namespace Amber
                 virtual Reference<IRenderTarget> createRenderTarget() = 0;
                 virtual Reference<IShader> createShader(IShader::Type type) = 0;
                 virtual Reference<IProgram> createProgram() = 0;
-                virtual Reference<ITexture> createTexture(ITexture::Type type) = 0;
+                virtual Reference<ITexture> createTexture(ITexture::Type type, ITexture::DataFormat dataFormat = ITexture::DataFormat::RGBA8) = 0;
 
                 virtual Reference<IRenderTarget> getDefaultRenderTarget() = 0;
 

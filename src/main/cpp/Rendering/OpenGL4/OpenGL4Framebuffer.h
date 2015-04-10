@@ -25,7 +25,7 @@ namespace Amber
                     OpenGL4Framebuffer &operator =(const OpenGL4Framebuffer &other) = delete;
                     OpenGL4Framebuffer &operator =(OpenGL4Framebuffer &&other) noexcept;
 
-                    virtual void attach(AttachmentType type, Reference<ITexture> texture) override final;
+                    virtual void attach(Reference<ITexture> texture, AttachmentType type, std::uint32_t index = 0) override final;
 
                     virtual void bind() override final;
                     virtual void unbind() override final;
@@ -36,6 +36,8 @@ namespace Amber
                 private:
                     friend class OpenGL4Context;
                     OpenGL4Framebuffer(int dummy);
+
+                    GLenum getGLType(AttachmentType type, std::uint32_t index) const;
             };
         }
     }

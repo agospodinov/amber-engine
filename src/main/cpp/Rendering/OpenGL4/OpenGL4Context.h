@@ -39,7 +39,7 @@ namespace Amber
                     virtual Reference<IRenderTarget> createRenderTarget() override final;
                     virtual Reference<IShader> createShader(IShader::Type type) override final;
                     virtual Reference<IProgram> createProgram() override final;
-                    virtual Reference<ITexture> createTexture(ITexture::Type type) override final;
+                    virtual Reference<ITexture> createTexture(ITexture::Type type, ITexture::DataFormat dataFormat = ITexture::DataFormat::RGBA8) override final;
 
                     virtual Reference<IRenderTarget> getDefaultRenderTarget() override final;
 

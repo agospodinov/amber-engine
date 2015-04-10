@@ -77,7 +77,7 @@ namespace Amber
             rgba8_image_t finalImage(loadedImage.dimensions());
             copy_and_convert_pixels(const_view(loadedImage), view(finalImage));
             const unsigned char *data = interleaved_view_get_raw_data(const_view(finalImage));
-            texture->setImageData(Rendering::ITexture::DataMode::RGBA, data);
+            texture->setImageData(data);
         }
     }
 }

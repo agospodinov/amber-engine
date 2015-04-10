@@ -24,7 +24,7 @@ namespace Amber
                 IRenderTarget() = default;
                 virtual ~IRenderTarget() = default;
 
-                virtual void attach(AttachmentType type, Reference<ITexture> texture) = 0;
+                virtual void attach(Reference<ITexture> texture, AttachmentType type, std::uint32_t index) = 0;
         };
     }
 }
