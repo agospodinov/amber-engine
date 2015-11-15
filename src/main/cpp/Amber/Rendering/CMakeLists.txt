@@ -1,6 +1,5 @@
 set(RENDERING_LIB_SOURCES
     Camera.cpp          Camera.h
-    Scene.cpp           Scene.h
     Model.cpp           Model.h
     Mesh.cpp            Mesh.h
     Material.cpp        Material.h
@@ -10,11 +9,11 @@ set(RENDERING_LIB_SOURCES
 
     Reference.txx       Reference.h
     BindLock.cpp        BindLock.h
-    Node.cpp            Node.h
     Procedure.cpp       Procedure.h
     RenderStage.cpp     RenderStage.h
     ShaderPass.cpp      ShaderPass.h
     Viewport.cpp        Viewport.h
+    RenderingSystem.cpp RenderingSystem.h
 
     IRenderer.cpp       IRenderer.h
     IRenderable.cpp     IRenderable.h
@@ -29,6 +28,8 @@ set(RENDERING_LIB_SOURCES
     ITexture.cpp        ITexture.h
 
     VertexTypes.cpp     VertexTypes.h
+
+    ForwardDeclarations.h
 )
 
 add_definitions("-DCOMPILING_DLL")

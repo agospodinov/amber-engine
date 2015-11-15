@@ -2,9 +2,10 @@
 #define GAME_H
 
 #include <memory>
+#include <vector>
 
-#include "Amber/Rendering/IRenderer.h"
-
+#include "Amber/Core/ISystem.h"
+#include "Amber/Core/Scene.h"
 #include "Amber/Utilities/Defines.h"
 
 namespace Amber
@@ -17,9 +18,18 @@ namespace Amber
                 Game() = default;
                 ~Game() = default;
 
+                const std::vector<std::unique_ptr<ISystem>> &getSystems() const;
+                void addSystem(std::unique_ptr<ISystem> system);
+
+                Scene &getScene();
+                const Scene &getScene() const;
+                void setScene(Scene scene);
+
             private:
-                std::unique_ptr<Rendering::IRenderer> renderer;
+                std::vector<std::unique_ptr<ISystem>> systems;
+                Scene scene;
         };
     }
 }
+
 #endif // GAME_H

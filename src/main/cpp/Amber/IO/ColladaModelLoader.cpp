@@ -9,10 +9,10 @@
 #include <COLLADAFW.h>
 #include <COLLADASaxFWLLoader.h>
 
+#include "Amber/Core/Node.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Model.h"
-#include "Amber/Rendering/Node.h"
 #include "Amber/Rendering/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
 #include "Amber/Utilities/Logger.h"
@@ -27,7 +27,7 @@ namespace Amber
         class ColladaModelLoader::OCLoader : public COLLADAFW::IWriter
         {
             public:
-                OCLoader(Rendering::Node *rootNode);
+                OCLoader(Core::Node *rootNode);
                 virtual ~OCLoader();
 
                 virtual void cancel(const COLLADAFW::String& errorMessage);
@@ -53,22 +53,23 @@ namespace Amber
 
             private:
                 Rendering::Reference<Rendering::ITexture> findTexture(const COLLADAFW::Texture &texture, const COLLADAFW::SamplerPointerArray &samplers);
-                Rendering::Procedure loadProcedure(const COLLADAFW::UniqueId &id, Rendering::Node::Type node);
+                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode);
 
                 Utilities::Logger log;
-                Rendering::Node *rootNode;
-                std::map<COLLADAFW::UniqueId, Rendering::Mesh> meshes;
-                std::map<COLLADAFW::UniqueId, Rendering::Material> materials;
-                std::map<COLLADAFW::UniqueId, Rendering::Reference<Rendering::ITexture>> textures;
-                std::map<COLLADAFW::UniqueId, Rendering::Procedure> procedures;
+                Core::Node *rootNode;
 
+                std::map<COLLADAFW::UniqueId, Rendering::Mesh> meshes;
+                std::map<COLLADAFW::UniqueId, Rendering::Material> effects;
+                std::map<COLLADAFW::UniqueId, Rendering::Reference<Rendering::ITexture>> textures;
+
+                std::multimap<COLLADAFW::UniqueId, COLLADAFW::UniqueId> meshesByModel;
                 std::map<COLLADAFW::UniqueId, COLLADAFW::MaterialId> materialsByMesh;
                 std::map<COLLADAFW::UniqueId, COLLADAFW::UniqueId> effectsByMaterial;
         };
 
-        std::unique_ptr<Rendering::Node> ColladaModelLoader::loadModel(const std::string &fileName)
+        std::unique_ptr<Core::Node> ColladaModelLoader::loadModel(const std::string &fileName)
         {
-            std::unique_ptr<Rendering::Node> rootNode(new Rendering::Node());
+            std::unique_ptr<Core::Node> rootNode(new Core::Node());
 
             COLLADASaxFWL::Loader loader;
             OCLoader writer(rootNode.get());
@@ -82,7 +83,7 @@ namespace Amber
             return rootNode;
         }
 
-        ColladaModelLoader::OCLoader::OCLoader(Rendering::Node *rootNode)
+        ColladaModelLoader::OCLoader::OCLoader(Core::Node *rootNode)
             : rootNode(rootNode)
         {
         }
@@ -130,68 +131,8 @@ namespace Amber
                              0,-1, 0, 0,
                              0, 0, 0, 1;
 
-            const COLLADAFW::NodePointerArray &nodes = visualScene->getRootNodes();
-            for (std::size_t i = 0; i < nodes.getCount(); i++)
-            {
-                std::unique_ptr<Rendering::Node> baseNode(new Rendering::Node());
-                COLLADAFW::Node *colladaNode = nodes[i];
-
-                COLLADABU::Math::Matrix4 m = colladaNode->getTransformationMatrix();
-                Eigen::Matrix4f modelMatrix;
-                modelMatrix << m[0][0], m[0][1], m[0][2], m[0][3],
-                               m[1][0], m[1][1], m[1][2], m[1][3],
-                               m[2][0], m[2][1], m[2][2], m[2][3],
-                               m[3][0], m[3][1], m[3][2], m[3][3];
-
-                baseNode->setLocalTransform(axisFixMatrix * modelMatrix);
-
-                const COLLADAFW::InstanceGeometryPointerArray &geometries = colladaNode->getInstanceGeometries();
-
-                for (std::size_t j = 0; j < geometries.getCount(); j++)
-                {
-                    COLLADAFW::InstanceGeometry *geometry = geometries[j];
-                    std::unique_ptr<Rendering::Node> modelNode(new Rendering::Node());
-
-                    std::unique_ptr<Rendering::Model> model(new Rendering::Model());
-                    Rendering::Mesh &mesh = meshes.at(geometry->getInstanciatedObjectId());
-                    Rendering::Material material;
-
-                    auto materialIt = materialsByMesh.find(geometry->getInstanciatedObjectId());
-                    if (!geometry->getMaterialBindings().empty() && materialIt != materialsByMesh.end())
-                    {
-                        const COLLADAFW::MaterialBindingArray &bindings = geometry->getMaterialBindings();
-                        for (std::size_t k = 0; k < bindings.getCount(); k++)
-                        {
-                            if (bindings[k].getMaterialId() == materialIt->second)
-                            {
-                                auto effectIt = effectsByMaterial.find(bindings[k].getReferencedMaterial());
-                                material = materials.at(effectIt->second);
-                            }
-                        }
-                    }
-
-                    model->addData(std::make_tuple(std::move(mesh), std::move(material)));
-
-                    // FIXME this should be reworked
-                    Rendering::Procedure procedure = loadProcedure(geometry->getUniqueId(), Rendering::Node::Type::Model);
-                    for (const Rendering::RenderStage &renderStage : procedure.getRenderStages())
-                    {
-                        for (const Rendering::ShaderPass &shaderPass : renderStage.getShaderPasses())
-                        {
-                            shaderPass.getProgram()->setLayout(mesh.getLayout());
-                        }
-                    }
-
-                    modelNode->setProcedure(std::move(procedure));
-                    modelNode->setRenderable(std::move(model));
-
-                    baseNode->addChild(std::move(modelNode));
-                }
-
-//                colladaNode->getInstanceLights()
-
-                rootNode->addChild(std::move(baseNode));
-            }
+            rootNode->setLocalTransform(axisFixMatrix);
+            traverseNodes(visualScene->getRootNodes(), rootNode);
 
             return true;
         }
@@ -258,9 +199,15 @@ namespace Amber
                     builder.setTexCoordIndices(primitive->getUVCoordIndices(0)->getIndices().getData());
                 }
 
+                // TODO a performance optimization is probably necessary here...
+                // the vertex data can be shared between the meshes so that they only
+                // use a single vertex buffer and a single index buffer and instead
+                // use a baseIndex when rendering
                 Rendering::Mesh mesh = builder.build();
-                meshes.emplace(colladaMesh->getUniqueId(), std::move(mesh));
-                materialsByMesh.emplace(colladaMesh->getUniqueId(), primitive->getMaterialId());
+                meshes.emplace(primitive->getUniqueId(), std::move(mesh));
+                materialsByMesh.emplace(primitive->getUniqueId(), primitive->getMaterialId());
+
+                meshesByModel.emplace(colladaMesh->getUniqueId(), primitive->getUniqueId());
             }
 
             return true;
@@ -307,7 +254,7 @@ namespace Amber
                 material.setIndexOfRefraction(commonEffect->getIndexOfRefraction().getFloatValue());
             }
 
-            materials.emplace(effect->getUniqueId(), std::move(material));
+            effects.emplace(effect->getUniqueId(), std::move(material));
 
             return true;
         }
@@ -397,46 +344,71 @@ namespace Amber
             return Rendering::Reference<Rendering::ITexture>();
         }
 
-        Rendering::Procedure ColladaModelLoader::OCLoader::loadProcedure(const COLLADAFW::UniqueId &id, Rendering::Node::Type nodeType)
+        void ColladaModelLoader::OCLoader::traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode)
         {
-            auto procedureIt = procedures.find(id);
-            if (procedureIt != procedures.end())
+            for (std::size_t i = 0; i < nodes.getCount(); i++)
             {
-                return procedureIt->second;
-            }
-            else
-            {
-                // FIXME I really don't like this
-                switch (nodeType)
+                COLLADAFW::Node *colladaNode = nodes[i];
+                std::unique_ptr<Core::Node> node(new Core::Node());
+
+                // FIXME might have to change to (COLLADAFW::Matrix *) getTransformations()[0]
+                COLLADABU::Math::Matrix4 m = colladaNode->getTransformationMatrix();
+                Eigen::Matrix4f modelMatrix;
+                modelMatrix << m[0][0], m[0][1], m[0][2], m[0][3],
+                               m[1][0], m[1][1], m[1][2], m[1][3],
+                               m[2][0], m[2][1], m[2][2], m[2][3],
+                               m[3][0], m[3][1], m[3][2], m[3][3];
+
+                node->setLocalTransform(modelMatrix);
+
+                const COLLADAFW::InstanceGeometryPointerArray &geometries = colladaNode->getInstanceGeometries();
+
+                for (std::size_t j = 0; j < geometries.getCount(); j++)
                 {
-                    case Rendering::Node::Type::Model:
+                    COLLADAFW::InstanceGeometry *geometry = geometries[j];
+                    std::unique_ptr<Core::Node> modelNode(new Core::Node());
+
+                    std::unique_ptr<Rendering::Model> model(new Rendering::Model());
+
+                    auto meshesIt = meshesByModel.equal_range(geometry->getInstanciatedObjectId());
+
+                    for (auto it = meshesIt.first; it != meshesIt.second; it++)
                     {
-                        Rendering::IContext *activeContext = Rendering::IContext::getActiveContext();
-                        IO::ShaderLoader shaderLoader;
-                        Rendering::Procedure procedure;
-                        Rendering::RenderStage renderStage(activeContext->getDefaultRenderTarget(), false);
-                        Rendering::Reference<Rendering::IShader> vertexShader = activeContext->createShader(Rendering::IShader::Type::VertexShader);
-                        shaderLoader.loadShader("BaseModel", vertexShader);
+                        Rendering::Mesh &mesh = meshes.at(it->second);
+                        Rendering::Material material;
 
-                        Rendering::Reference<Rendering::IShader> pixelShader = activeContext->createShader(Rendering::IShader::Type::PixelShader);
-                        shaderLoader.loadShader("BaseModel", pixelShader);
+                        // In collada, each mesh (a.k.a. primitive) has a MaterialId that it's bound to.
+                        // So we need to search through the material bindings to find the one that corresponds
+                        // to that mesh, get its unique id and then find the corresponding material.
+                        auto materialIt = materialsByMesh.find(it->second);
+                        if (!geometry->getMaterialBindings().empty() && materialIt != materialsByMesh.end())
+                        {
+                            const COLLADAFW::MaterialBindingArray &bindings = geometry->getMaterialBindings();
+                            for (std::size_t k = 0; k < bindings.getCount(); k++)
+                            {
+                                if (bindings[k].getMaterialId() == materialIt->second)
+                                {
+                                    auto effectIt = effectsByMaterial.find(bindings[k].getReferencedMaterial());
+                                    material = effects.at(effectIt->second);
+                                    break;
+                                }
+                            }
+                        }
 
-                        Rendering::Reference<Rendering::IProgram> modelsProgram = activeContext->createProgram();
-                        modelsProgram->addShader(vertexShader);
-                        modelsProgram->addShader(pixelShader);
-
-                        Rendering::ShaderPass modelsPass(std::move(modelsProgram));
-                        renderStage.addShaderPass(std::move(modelsPass));
-                        procedure.appendRenderStage(std::move(renderStage));
-                        return procedure;
+                        model->addData(std::make_tuple(std::move(mesh), std::move(material)));
                     }
-                    case Rendering::Node::Type::Light:
-                        throw std::runtime_error("Not yet implemented");
-                    default:
-                        throw std::invalid_argument("Invalid node type");
-                }
-            }
 
+                    // FIXME here
+                    modelNode->addComponent(std::move(model));
+                    node->addChild(std::move(modelNode));
+                }
+
+//                colladaNode->getInstanceLights()
+
+                traverseNodes(colladaNode->getChildNodes(), node.get());
+
+                parentNode->addChild(std::move(node));
+            }
         }
     }
 }

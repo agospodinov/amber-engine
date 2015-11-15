@@ -24,10 +24,8 @@ namespace Amber
         class Material;
         class Mesh;
         class Model;
-        class Node;
         class Procedure;
         class RenderStage;
-        class Scene;
         class ShaderPass;
         class Skybox;
         class Viewport;

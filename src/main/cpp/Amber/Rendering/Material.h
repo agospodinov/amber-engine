@@ -13,7 +13,7 @@ namespace Amber
         class Material
         {
             public:
-                Material() = default;
+                Material();
                 ~Material() = default;
 
                 float getEmission() const;
@@ -45,6 +45,7 @@ namespace Amber
                 float translucency;
                 float reflectivity;
                 float indexOfRefraction;
+                bool subsurfaceScattering;
 
                 Reference<ITexture> diffuseTexture;
                 Reference<ITexture> normalMap;

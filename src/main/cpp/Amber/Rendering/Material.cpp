@@ -4,6 +4,15 @@ namespace Amber
 {
     namespace Rendering
     {
+        Material::Material()
+            : emission(0),
+              translucency(0),
+              reflectivity(0),
+              indexOfRefraction(1),
+              subsurfaceScattering(false)
+        {
+        }
+
         float Material::getEmission() const
         {
             return emission;

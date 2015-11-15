@@ -7,8 +7,7 @@
 
 #include "Amber/Rendering/IProgram.h"
 #include "Amber/Rendering/ITexture.h"
-#include "Amber/Rendering/Material.h"
-#include "Amber/Rendering/Mesh.h"
+#include "Amber/Rendering/Model.h"
 
 namespace Amber
 {
@@ -20,12 +19,14 @@ namespace Amber
                 Skybox() = default;
                 virtual ~Skybox() = default;
 
+                virtual Type getType();
+                virtual bool isSetup() const;
+
                 virtual void setup(IRenderer *renderer);
                 virtual void render(IRenderer *renderer);
 
             private:
-                Mesh box;
-                Material material;
+                Model model;
         };
     }
 }

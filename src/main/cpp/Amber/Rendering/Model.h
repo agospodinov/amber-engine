@@ -20,7 +20,7 @@ namespace Amber
             public:
                 typedef std::tuple<Mesh, Material> ModelData;
 
-                Model() = default;
+                Model();
                 Model(const Model &other) = delete;
                 Model(Model &&other) noexcept = default;
                 virtual ~Model() = default;
@@ -28,14 +28,18 @@ namespace Amber
                 Model &operator =(const Model &other) = delete;
                 Model &operator =(Model &&other) noexcept = default;
 
-                virtual void setup(IRenderer *renderer);
-                virtual void render(IRenderer *renderer);
+                virtual Type getType() override;
+                virtual bool isSetup() const override;
+
+                virtual void setup(IRenderer *renderer) override;
+                virtual void render(IRenderer *renderer) override;
 
                 const std::vector<ModelData> &getData() const;
                 void addData(ModelData data);
 
             private:
                 std::vector<ModelData> data;
+                bool allDataSetup;
         };
     }
 }

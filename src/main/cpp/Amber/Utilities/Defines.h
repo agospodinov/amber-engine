@@ -6,13 +6,13 @@
 #    ifdef __GNUC__
 #      define AMBER_EXPORTS __attribute__((dllexport))
 #    else
-#      define  AMBER_EXPORTS __declspec(dllexport)
+#      define AMBER_EXPORTS __declspec(dllexport)
 #    endif
 #  else
 #    ifdef __GNUC__
 #      define AMBER_EXPORTS __attribute__((dllimport))
 #    else
-#      define  AMBER_EXPORTS __declspec(dllimport)
+#      define AMBER_EXPORTS __declspec(dllimport)
 #    endif
 #  endif /* COMPILING_DLL */
 #  define AMBER_PRIVATE

@@ -8,7 +8,7 @@
 
 #include <memory>
 
-#include "Amber/Rendering/Node.h"
+#include "Amber/Core/Node.h"
 
 namespace Amber
 {
@@ -20,7 +20,7 @@ namespace Amber
                 ColladaModelLoader() = default;
                 virtual ~ColladaModelLoader() = default;
 
-                virtual std::unique_ptr<Rendering::Node> loadModel(const std::string &fileName) override final;
+                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName) override final;
 
             private:
                 class OCLoader;

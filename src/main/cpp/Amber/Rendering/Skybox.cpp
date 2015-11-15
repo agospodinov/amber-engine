@@ -6,7 +6,8 @@
 #include "IContext.h"
 #include "IRenderer.h"
 #include "Layout.h"
-#include "Node.h"
+#include "Material.h"
+#include "Mesh.h"
 #include "RenderStage.h"
 #include "ShaderPass.h"
 
@@ -14,6 +15,16 @@ namespace Amber
 {
     namespace Rendering
     {
+        Core::IComponent::Type Skybox::getType()
+        {
+            return model.getType();
+        }
+
+        bool Skybox::isSetup() const
+        {
+            return model.isSetup();
+        }
+
         void Skybox::setup(IRenderer *renderer)
         {
             const float distance = 1.0f;
@@ -51,6 +62,7 @@ namespace Amber
 
             Layout layout;
             layout.insertAttribute(Layout::Attribute("mdl_Position", Layout::ComponentType::Float, 3));
+            Mesh box;
             box.setLayout(layout);
 
             box.getVertexBuffer()->resize(positions.size() * sizeof(float));
@@ -67,17 +79,18 @@ namespace Amber
 //            textureLoader.loadTexture("Skybox.jpg", texture); // FIXME I don't like this being hardcoded
             texture->setWrapMode(ITexture::WrapMode::ClampToEdge);
 
+            Material material;
             material.setDiffuseTexture(texture);
 
-            renderer->prepare(box);
-            renderer->prepare(material);
+            model.addData(std::make_tuple(std::move(box), std::move(material)));
+            model.setup(renderer);
         }
 
         void Skybox::render(IRenderer *renderer)
         {
             bool depthTestEnabled = renderer->getRenderOption(IRenderer::RenderOption::DepthTest);
             renderer->setRenderOption(IRenderer::RenderOption::DepthTest, false);
-            renderer->render(box, material);
+            model.render(renderer);
             renderer->setRenderOption(IRenderer::RenderOption::DepthTest, depthTestEnabled);
         }
     }

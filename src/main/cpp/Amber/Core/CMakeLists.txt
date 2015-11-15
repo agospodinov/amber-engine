@@ -2,6 +2,11 @@ set(CORE_LIB_SOURCES
     Game.cpp            Game.h
     Player.cpp          Player.h
     Round.cpp           Round.h
+    Scene.cpp           Scene.h
+    Node.cpp            Node.h
+
+    ISystem.cpp         ISystem.h
+    IComponent.cpp      IComponent.h
 )
 
 #include_directories()

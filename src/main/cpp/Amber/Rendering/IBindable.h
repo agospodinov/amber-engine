@@ -17,7 +17,7 @@ namespace Amber
                     RenderTarget,
                     Program,
                     Texture,
-                    VertexArray
+                    VertexArray // FIXME API-specific
                 };
 
                 IBindable() = default;

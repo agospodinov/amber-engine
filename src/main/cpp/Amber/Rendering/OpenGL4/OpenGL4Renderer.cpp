@@ -42,29 +42,6 @@ namespace Amber
                 context.createVertexArray(&object);
             }
 
-            void OpenGL4Renderer::prepare(Material &material)
-            {
-                if (material.getDiffuseTexture().isValid())
-                {
-                    prepare(material.getDiffuseTexture());
-                }
-
-                if (material.getNormalMap().isValid())
-                {
-                    prepare(material.getNormalMap());
-                }
-
-                if (material.getSpecularMap().isValid())
-                {
-                    prepare(material.getSpecularMap());
-                }
-
-                if (material.getDisplacementMap().isValid())
-                {
-                    prepare(material.getDisplacementMap());
-                }
-            }
-
             void OpenGL4Renderer::prepare(Reference<IProgram> program)
             {
                 if (!program.cast<OpenGL4Program>().isValid())
@@ -102,7 +79,7 @@ namespace Amber
                 }
             }
 
-            void OpenGL4Renderer::render()
+            void OpenGL4Renderer::render(Core::Scene &scene)
             {
                 glDepthMask(GL_TRUE);
                 glEnable(GL_ALPHA);
@@ -110,44 +87,44 @@ namespace Amber
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                scene.getWorldNode().traverse([this](Node *node)
-                {
+//                scene.getWorldNode()->traverse([this, &scene](Core::Node *node)
+//                {
 
-                    if (!node->isSetup() && node->hasRenderable())
-                    {
-                        node->getRenderable()->setup(this);
-                        std::for_each(node->getProcedure().getRenderStages().begin(),
-                                      node->getProcedure().getRenderStages().end(),
-                                      std::bind(&RenderStage::setup, std::placeholders::_1, this));
+//                    if (!node->isSetup() && node->hasRenderable())
+//                    {
+//                        node->getRenderable()->setup(this);
+//                        std::for_each(node->getProcedure().getRenderStages().begin(),
+//                                      node->getProcedure().getRenderStages().end(),
+//                                      std::bind(&RenderStage::setup, std::placeholders::_1, this));
 
-                        node->markSetup();
-                    }
+//                        node->markSetup();
+//                    }
 
-                    if (node->hasRenderable())
-                    {
-                        // FIXME change naive loop to a more optimized draw loop
-                        for (const RenderStage &renderStage : node->getProcedure().getRenderStages())
-                        {
-                            BindLock renderTargetLock(renderStage.getRenderTarget().cast<IBindable>());
+//                    if (node->hasRenderable())
+//                    {
+//                        // FIXME change naive loop to a more optimized draw loop
+//                        for (const RenderStage &renderStage : node->getProcedure().getRenderStages())
+//                        {
+//                            BindLock renderTargetLock(renderStage.getRenderTarget().cast<IBindable>());
 
-                            if (renderStage.shouldClearBeforeRendering())
-                            {
-                                clear();
-                            }
+//                            if (renderStage.shouldClearBeforeRendering())
+//                            {
+//                                clear();
+//                            }
 
-                            for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
-                            {
-                                BindLock shaderPassLock(shaderPass.getProgram().cast<IBindable>());
+//                            for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
+//                            {
+//                                BindLock shaderPassLock(shaderPass.getProgram().cast<IBindable>());
 
-                                Eigen::Matrix4f modelViewMatrix = scene.getCamera().getViewMatrix() * node->getTransform();
-                                shaderPass.getProgram()->setConstant("mdl_ModelView", modelViewMatrix);
-                                shaderPass.getProgram()->setConstant("mdl_Projection", scene.getCamera().getProjectionMatrix());
+//                                Eigen::Matrix4f modelViewMatrix = scene.getCamera().getViewMatrix() * node->getTransform();
+//                                shaderPass.getProgram()->setConstant("mdl_ModelView", modelViewMatrix);
+//                                shaderPass.getProgram()->setConstant("mdl_Projection", scene.getCamera().getProjectionMatrix());
 
-                                node->getRenderable()->render(this);
-                            }
-                        }
-                    }
-                });
+//                                node->getRenderable()->render(this);
+//                            }
+//                        }
+//                    }
+//                });
             }
 
             void OpenGL4Renderer::render(IObject &object, Material &material)
@@ -209,20 +186,25 @@ namespace Amber
                 }
             }
 
-            void OpenGL4Renderer::handleWindowResize(int width, int height)
+            Procedure &OpenGL4Renderer::getProcedure()
             {
-                viewport.setSize(width, height);
-                scene.getCamera().setPerspectiveProjection(60.0f, static_cast<float>(viewport.getWidth()) / static_cast<float>(viewport.getHeight()), 0.1f, 1000.0f);
+                return procedure;
             }
+
+            const Procedure &OpenGL4Renderer::getProcedure() const
+            {
+                return procedure;
+            }
+
+            void OpenGL4Renderer::setProcedure(Procedure procedure)
+            {
+                this->procedure = std::move(procedure);
+            }
+
 
             IContext &OpenGL4Renderer::getContext()
             {
                 return context;
-            }
-
-            Scene &OpenGL4Renderer::getScene()
-            {
-                return scene;
             }
 
             Viewport &OpenGL4Renderer::getViewport()
