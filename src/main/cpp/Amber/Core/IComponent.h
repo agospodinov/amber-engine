@@ -10,7 +10,8 @@ namespace Amber
             public:
                 enum class Type
                 {
-                    Model,
+                    Mesh,
+                    Material,
                     Light,
                     Camera,
                     Skeleton
@@ -19,7 +20,7 @@ namespace Amber
                 IComponent() = default;
                 virtual ~IComponent() = default;
 
-                virtual Type getType() = 0;
+                virtual Type getType() const = 0;
 
                 virtual bool isSetup() const = 0;
         };

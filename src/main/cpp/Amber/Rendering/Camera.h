@@ -15,8 +15,8 @@ namespace Amber
                 Camera();
                 virtual ~Camera() = default;
 
-                virtual Type getType();
-                virtual bool isSetup() const;
+                virtual Type getType() const override final;
+                virtual bool isSetup() const override final;
 
                 void setLookAt(const Eigen::Vector3f &eye, const Eigen::Vector3f &center, const Eigen::Vector3f &up);
                 void setPerspectiveProjection(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);

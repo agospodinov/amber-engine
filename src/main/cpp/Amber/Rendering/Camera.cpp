@@ -14,7 +14,7 @@ namespace Amber
         {
         }
 
-        Core::IComponent::Type Camera::getType()
+        Core::IComponent::Type Camera::getType() const
         {
             return IComponent::Type::Camera;
         }

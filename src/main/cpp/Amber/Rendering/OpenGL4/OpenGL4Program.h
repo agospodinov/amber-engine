@@ -35,7 +35,7 @@ namespace Amber
                     virtual void unbind() override final;
 
                     virtual BindType getBindType() const override final;
-                    virtual std::uint32_t getBindSlot() const;
+                    virtual std::uint32_t getBindSlot() const override final;
 
                     virtual void link() override final;
                     virtual bool isLinked() const override final;

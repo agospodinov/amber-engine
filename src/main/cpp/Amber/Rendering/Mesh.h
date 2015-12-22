@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "Amber/Core/IComponent.h"
 #include "Amber/Rendering/IObject.h"
 
 #include <memory>
@@ -18,7 +19,7 @@ namespace Amber
 {
     namespace Rendering
     {
-        class Mesh : public IObject
+        class Mesh : public IObject, public Core::IComponent
         {
             public:
                 Mesh();
@@ -28,6 +29,9 @@ namespace Amber
 
                 Mesh &operator =(const Mesh &other) = delete;
                 Mesh &operator =(Mesh &&other) noexcept = default;
+
+                Type getType() const override final;
+                bool isSetup() const override final;
 
                 virtual Reference<IBuffer> &getVertexBuffer() override final;
                 virtual const Reference<IBuffer> &getVertexBuffer() const override final;
@@ -57,7 +61,6 @@ namespace Amber
                 Layout layout;
                 std::size_t vertexCount;
                 std::size_t primitiveCount;
-                Eigen::Matrix4f localTransform;
         };
     }
 }

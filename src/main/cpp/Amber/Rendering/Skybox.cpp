@@ -15,14 +15,15 @@ namespace Amber
 {
     namespace Rendering
     {
+        // FIXME these methods are wrong
         Core::IComponent::Type Skybox::getType()
         {
-            return model.getType();
+            return Core::IComponent::Type::Mesh;
         }
 
         bool Skybox::isSetup() const
         {
-            return model.isSetup();
+            return false;
         }
 
         void Skybox::setup(IRenderer *renderer)
@@ -62,7 +63,6 @@ namespace Amber
 
             Layout layout;
             layout.insertAttribute(Layout::Attribute("mdl_Position", Layout::ComponentType::Float, 3));
-            Mesh box;
             box.setLayout(layout);
 
             box.getVertexBuffer()->resize(positions.size() * sizeof(float));
@@ -79,18 +79,14 @@ namespace Amber
 //            textureLoader.loadTexture("Skybox.jpg", texture); // FIXME I don't like this being hardcoded
             texture->setWrapMode(ITexture::WrapMode::ClampToEdge);
 
-            Material material;
             material.setDiffuseTexture(texture);
-
-            model.addData(std::make_tuple(std::move(box), std::move(material)));
-            model.setup(renderer);
         }
 
         void Skybox::render(IRenderer *renderer)
         {
             bool depthTestEnabled = renderer->getRenderOption(IRenderer::RenderOption::DepthTest);
             renderer->setRenderOption(IRenderer::RenderOption::DepthTest, false);
-            model.render(renderer);
+            renderer->render(box, material);
             renderer->setRenderOption(IRenderer::RenderOption::DepthTest, depthTestEnabled);
         }
     }

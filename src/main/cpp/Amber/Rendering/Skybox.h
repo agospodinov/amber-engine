@@ -7,7 +7,8 @@
 
 #include "Amber/Rendering/IProgram.h"
 #include "Amber/Rendering/ITexture.h"
-#include "Amber/Rendering/Model.h"
+#include "Amber/Rendering/Material.h"
+#include "Amber/Rendering/Mesh.h"
 
 namespace Amber
 {
@@ -26,7 +27,8 @@ namespace Amber
                 virtual void render(IRenderer *renderer);
 
             private:
-                Model model;
+                Mesh box;
+                Material material;
         };
     }
 }

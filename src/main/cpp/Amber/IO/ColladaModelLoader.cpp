@@ -12,7 +12,6 @@
 #include "Amber/Core/Node.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
-#include "Amber/Rendering/Model.h"
 #include "Amber/Rendering/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
 #include "Amber/Utilities/Logger.h"
@@ -368,12 +367,12 @@ namespace Amber
                     COLLADAFW::InstanceGeometry *geometry = geometries[j];
                     std::unique_ptr<Core::Node> modelNode(new Core::Node());
 
-                    std::unique_ptr<Rendering::Model> model(new Rendering::Model());
-
                     auto meshesIt = meshesByModel.equal_range(geometry->getInstanciatedObjectId());
 
                     for (auto it = meshesIt.first; it != meshesIt.second; it++)
                     {
+                        std::unique_ptr<Core::Node> meshNode(new Core::Node());
+
                         Rendering::Mesh &mesh = meshes.at(it->second);
                         Rendering::Material material;
 
@@ -395,11 +394,12 @@ namespace Amber
                             }
                         }
 
-                        model->addData(std::make_tuple(std::move(mesh), std::move(material)));
+                        meshNode->addComponent(std::unique_ptr<Rendering::Mesh>(new Rendering::Mesh(std::move(mesh))));
+                        meshNode->addComponent(std::unique_ptr<Rendering::Material>(new Rendering::Material(std::move(material))));
+
+                        modelNode->addChild(std::move(meshNode));
                     }
 
-                    // FIXME here
-                    modelNode->addComponent(std::move(model));
                     node->addChild(std::move(modelNode));
                 }
 

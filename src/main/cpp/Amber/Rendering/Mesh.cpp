@@ -10,8 +10,7 @@ namespace Amber
     {
         Mesh::Mesh()
             : vertexCount(0),
-              primitiveCount(0),
-              localTransform(Eigen::Matrix4f::Identity())
+              primitiveCount(0)
         {
             // FIXME I'd rather we didn't depend on an active context in this constructor
             IContext *context = IContext::getActiveContext();
@@ -20,6 +19,16 @@ namespace Amber
                 vertexBuffer = context->createHardwareBuffer(IBuffer::Type::Vertex);
                 indexBuffer = context->createHardwareBuffer(IBuffer::Type::Index);
             }
+        }
+
+        Core::IComponent::Type Mesh::getType() const
+        {
+            return Core::IComponent::Type::Mesh;
+        }
+
+        bool Mesh::isSetup() const
+        {
+            return isInHardwareStorage();
         }
 
         Reference<IBuffer> &Mesh::getVertexBuffer()
@@ -86,11 +95,6 @@ namespace Amber
         std::size_t Mesh::getInstanceCount() const
         {
             return 1;
-        }
-
-        const Eigen::Matrix4f &Mesh::getLocalTransform() const
-        {
-            return localTransform;
         }
 
         void Mesh::setLayout(Layout layout)

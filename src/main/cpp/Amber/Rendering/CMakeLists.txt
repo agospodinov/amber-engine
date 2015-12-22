@@ -1,6 +1,5 @@
 set(RENDERING_LIB_SOURCES
     Camera.cpp          Camera.h
-    Model.cpp           Model.h
     Mesh.cpp            Mesh.h
     Material.cpp        Material.h
     Light.cpp           Light.h
