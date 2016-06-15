@@ -73,6 +73,15 @@ namespace Amber
         }
 
         template <typename ValueType>
+        template <typename NewType>
+        Reference<ValueType>::operator Reference<NewType>() const
+        {
+            static_assert(std::is_base_of<NewType, ValueType>::value, "Value is not implicitly convertible");
+            NewType *newValue = dynamic_cast<NewType *>(value);
+            return (newValue != nullptr) ? Reference<NewType>(context, newValue) : Reference<NewType>();
+        }
+
+        template <typename ValueType>
         bool Reference<ValueType>::isValid() const
         {
             IContext *activeContext = IContext::getActiveContext();

@@ -139,11 +139,11 @@ namespace Amber
 
                 std::vector<BindLock> locks;
 
-                locks.emplace_back(vertexArray.cast<IBindable>());
-                locks.emplace_back(material.getDiffuseTexture().cast<IBindable>());
-                locks.emplace_back(material.getNormalMap().cast<IBindable>());
-                locks.emplace_back(material.getSpecularMap().cast<IBindable>());
-                locks.emplace_back(material.getDisplacementMap().cast<IBindable>());
+                locks.emplace_back(vertexArray);
+                locks.emplace_back(material.getDiffuseTexture());
+                locks.emplace_back(material.getNormalMap());
+                locks.emplace_back(material.getSpecularMap());
+                locks.emplace_back(material.getDisplacementMap());
 
                 if (vertexArray->hasIndexBuffer())
                 {

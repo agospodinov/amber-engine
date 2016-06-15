@@ -34,6 +34,9 @@ namespace Amber
                 template <typename NewType>
                 Reference<NewType> cast() const;
 
+                template <typename NewType>
+                operator Reference<NewType>() const;
+
                 bool isValid() const;
 
             private:
