@@ -33,8 +33,7 @@ namespace Amber
             node->dirty = true;
 
             this->children.push_back(std::move(node));
-            this->dirty = true;
-            propagateDirtyFlag();
+            markDirty();
         }
 
         Eigen::Matrix4f Node::getTransform() const
@@ -63,17 +62,17 @@ namespace Amber
         void Node::setLocalTransform(Eigen::Matrix4f localTransform)
         {
             this->localTransform = localTransform;
-            this->dirty = true;
+            markDirty();
         }
 
         bool Node::isDirty() const
         {
-            if (!dirty && parent != nullptr)
-            {
-                dirty |= parent->isDirty();
-            }
-
             return dirty;
+        }
+
+        void Node::markDirty()
+        {
+            traverse([] (Node *node) { node->dirty = true; });
         }
 
         void Node::traverse(std::function<void(Node *)> callback)
@@ -83,15 +82,6 @@ namespace Amber
             for (const std::unique_ptr<Node> &childNode : children)
             {
                 childNode->traverse(callback);
-            }
-        }
-
-        void Node::propagateDirtyFlag() const
-        {
-            if (parent)
-            {
-                parent->dirty |= this->dirty;
-                parent->propagateDirtyFlag();
             }
         }
     }

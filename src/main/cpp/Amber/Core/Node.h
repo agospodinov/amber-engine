@@ -33,9 +33,10 @@ namespace Amber
 
                 void traverse(std::function<void(Node *)> callback);
 
-            private:
-                void propagateDirtyFlag() const;
+            protected:
+                void markDirty();
 
+            private:
                 const Node *parent;
                 std::vector<std::unique_ptr<Node>> children;
 
