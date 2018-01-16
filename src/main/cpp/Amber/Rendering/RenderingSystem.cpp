@@ -3,7 +3,6 @@
 #include "Amber/Utilities/Config.h"
 
 #include "Amber/Core/Node.h"
-#include "Amber/Core/IComponent.h"
 #include "Amber/IO/ShaderLoader.h"
 #include "Amber/Rendering/Camera.h"
 #include "Amber/Rendering/OpenGL4/OpenGL4Renderer.h"
@@ -38,9 +37,7 @@ namespace Amber
 
         void RenderingSystem::handleWindowResize(int width, int height)
         {
-            renderer->getViewport().setSize(width, height);
-            Camera *camera = static_cast<Camera *>(game->getScene().getWorldNode()->getComponent(Core::IComponent::Type::Camera));
-            camera->setPerspectiveProjection(60.0f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
+            renderer->getViewport().resize(width, height);
         }
 
         Procedure RenderingSystem::getDefaultProcedure()

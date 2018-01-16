@@ -1,6 +1,8 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+#include "Amber/Rendering/Camera.h"
+
 namespace Amber
 {
     namespace Rendering
@@ -11,14 +13,16 @@ namespace Amber
                 Viewport() = default;
 
                 int getWidth() const;
-                void setWidth(int width);
-
                 int getHeight() const;
-                void setHeight(int height);
 
-                void setSize(int width, int height);
+                Camera *getCamera() const;
+                void setCamera(Camera *camera);
+
+                void resize(int width, int height);
 
             private:
+                Camera *camera;
+
                 int width;
                 int height;
         };

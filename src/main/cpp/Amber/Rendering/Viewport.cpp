@@ -9,25 +9,29 @@ namespace Amber
             return width;
         }
 
-        void Viewport::setWidth(int width)
-        {
-            this->width = width;
-        }
-
         int Viewport::getHeight() const
         {
             return height;
         }
 
-        void Viewport::setHeight(int height)
+        Camera *Viewport::getCamera() const
         {
-            this->height = height;
+            return camera;
         }
 
-        void Viewport::setSize(int width, int height)
+        void Viewport::setCamera(Camera *camera)
         {
-            setWidth(width);
-            setHeight(height);
+            this->camera = camera;
+        }
+
+        void Viewport::resize(int width, int height)
+        {
+            this->width = width;
+            this->height = height;
+
+            if (camera != nullptr) {
+                camera->setPerspectiveProjection(60.0f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
+            }
         }
     }
 }
