@@ -6,9 +6,8 @@
 #include <mutex>
 #include <utility>
 
-#include <GL/gl.h>
-
 #include "Amber/Rendering/IObject.h"
+#include "OpenGL4Includes.h"
 #include "OpenGL4Buffer.h"
 #include "OpenGL4Framebuffer.h"
 #include "OpenGL4Shader.h"

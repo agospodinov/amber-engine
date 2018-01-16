@@ -97,6 +97,11 @@ namespace Amber
             return 1;
         }
 
+        const Eigen::Matrix4f &Mesh::getLocalTransform() const
+        {
+            return Eigen::Matrix4f::Identity();
+        }
+
         void Mesh::setLayout(Layout layout)
         {
             this->layout = std::move(layout);

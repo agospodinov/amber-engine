@@ -4,10 +4,9 @@
 #include "Amber/Rendering/IBindable.h"
 #include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
 
-#include <GL/gl.h>
-
 #include "Amber/Rendering/Layout.h"
 #include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

@@ -8,8 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include <GL/gl.h>
-#include <GL/glext.h>
+#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

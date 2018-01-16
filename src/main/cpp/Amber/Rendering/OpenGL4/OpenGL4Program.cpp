@@ -3,9 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <GL/gl.h>
-
 #include "Amber/Utilities/Logger.h"
+#include "OpenGL4Includes.h"
 #include "OpenGL4Shader.h"
 
 namespace Amber

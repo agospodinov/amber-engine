@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cstdint>
 
-#include <GL/gl.h>
+#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

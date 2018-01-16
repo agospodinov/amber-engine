@@ -8,9 +8,8 @@
 #include <memory>
 #include <vector>
 
-#include <GL/gl.h>
-
 #include "Amber/Rendering/Layout.h"
+#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

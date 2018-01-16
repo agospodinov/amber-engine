@@ -1,9 +1,7 @@
 #include "OpenGL4VertexArray.h"
 
-#include <GL/gl.h>
-#include <GL/glext.h>
-
 #include "Amber/Rendering/VertexTypes.h"
+#include "OpenGL4Includes.h"
 #include "OpenGL4Buffer.h"
 
 namespace Amber

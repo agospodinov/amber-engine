@@ -8,6 +8,8 @@ set(OPENGL4_SOURCES
     OpenGL4Program.cpp              OpenGL4Program.h
     OpenGL4Shader.cpp               OpenGL4Shader.h
     OpenGL4Texture.cpp              OpenGL4Texture.h
+
+    OpenGL4Includes.h
 )
 
 set(OPENGL4_GLSL_SOURCES

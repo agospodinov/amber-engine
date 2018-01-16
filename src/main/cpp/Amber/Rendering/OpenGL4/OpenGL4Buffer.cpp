@@ -4,6 +4,8 @@
 #include <cstring>
 #include <functional>
 
+#include "OpenGL4Includes.h"
+
 namespace Amber
 {
     namespace Rendering
@@ -134,7 +136,7 @@ namespace Amber
             void OpenGL4Buffer::clear()
             {
                 // FIXME unsure if this is correct
-                glInvalidateBufferData(handle);
+//                glInvalidateBufferData(handle);
             }
 
             void OpenGL4Buffer::bind()

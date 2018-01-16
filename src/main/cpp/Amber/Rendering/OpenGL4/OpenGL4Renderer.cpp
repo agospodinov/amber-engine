@@ -1,8 +1,5 @@
 #include "OpenGL4Renderer.h"
 
-#include <GL/gl.h>
-#include <GL/glext.h>
-
 #include "Amber/Utilities/Defines.h"
 #include "Amber/Rendering/IObject.h"
 #include "Amber/Rendering/IRenderTarget.h"
@@ -12,6 +9,7 @@
 #include "Amber/Rendering/RenderStage.h"
 #include "Amber/IO/ShaderLoader.h"
 #include "Amber/Utilities/Logger.h"
+#include "OpenGL4Includes.h"
 #include "OpenGL4Buffer.h"
 #include "OpenGL4Framebuffer.h"
 #include "OpenGL4Program.h"

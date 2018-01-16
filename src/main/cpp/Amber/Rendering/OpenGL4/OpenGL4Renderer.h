@@ -5,11 +5,10 @@
 
 #include <deque>
 
-#include <GL/gl.h>
-
 #include "Amber/Rendering/Procedure.h"
 #include "Amber/Rendering/Viewport.h"
-#include "OpenGL4Context.h"
+#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/OpenGL4/OpenGL4Context.h"
 
 namespace Amber
 {

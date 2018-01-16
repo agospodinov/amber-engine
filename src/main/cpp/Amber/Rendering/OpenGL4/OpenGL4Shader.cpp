@@ -4,9 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include <GL/gl.h>
-
 #include "Amber/Utilities/Logger.h"
+#include "OpenGL4Includes.h"
 
 namespace Amber
 {
@@ -129,8 +128,8 @@ namespace Amber
                         return GL_FRAGMENT_SHADER;
                     case Type::GeometryShader:
                         return GL_GEOMETRY_SHADER;
-                    case Type::ComputeShader:
-                        return GL_COMPUTE_SHADER;
+//                    case Type::ComputeShader:
+//                        return GL_COMPUTE_SHADER;
                     default:
                         throw std::invalid_argument("Unsupported shader type.");
                 }

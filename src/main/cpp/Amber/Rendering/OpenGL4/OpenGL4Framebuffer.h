@@ -6,8 +6,6 @@
 
 #include <cstdint>
 
-#include <GL/gl.h>
-
 namespace Amber
 {
     namespace Rendering

@@ -1,6 +1,7 @@
 #include "MeshBuilder.h"
 
 #include <map>
+#include <numeric>
 
 namespace Amber
 {
