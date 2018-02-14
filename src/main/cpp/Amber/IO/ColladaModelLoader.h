@@ -6,7 +6,9 @@
 
 #include "Amber/IO/IModelLoader.h"
 
-#include <memory>
+#include <vector>
+
+#include "Amber/Core/Entity.h"
 
 namespace Amber
 {
@@ -18,7 +20,7 @@ namespace Amber
                 ColladaModelLoader() = default;
                 virtual ~ColladaModelLoader() = default;
 
-//                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName) override final;
+                virtual std::vector<Core::Entity> loadModel(const std::string &fileName) override final;
 
             private:
                 class OCLoader;

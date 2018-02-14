@@ -9,6 +9,7 @@
 #include <COLLADAFW.h>
 #include <COLLADASaxFWLLoader.h>
 
+#include "Amber/Core/Entity.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Reference.h"
@@ -25,7 +26,7 @@ namespace Amber
         class ColladaModelLoader::OCLoader : public COLLADAFW::IWriter
         {
             public:
-//                OCLoader(Core::Node *rootNode);
+                OCLoader(std::vector<Core::Entity> &entities);
                 virtual ~OCLoader();
 
                 virtual void cancel(const COLLADAFW::String& errorMessage);
@@ -54,7 +55,7 @@ namespace Amber
 //                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode);
 
                 Utilities::Logger log;
-//                Core::Node *rootNode;
+                std::vector<Core::Entity> &entities;
 
                 std::map<COLLADAFW::UniqueId, Rendering::Mesh> meshes;
                 std::map<COLLADAFW::UniqueId, Rendering::Material> effects;
@@ -65,13 +66,13 @@ namespace Amber
                 std::map<COLLADAFW::UniqueId, COLLADAFW::UniqueId> effectsByMaterial;
         };
 
-        /*
-        std::unique_ptr<Core::Node> ColladaModelLoader::loadModel(const std::string &fileName)
+
+        std::vector<Core::Entity> ColladaModelLoader::loadModel(const std::string &fileName)
         {
-            std::unique_ptr<Core::Node> rootNode(new Core::Node());
+            std::vector<Core::Entity> entities;
 
             COLLADASaxFWL::Loader loader;
-            OCLoader writer(rootNode.get());
+            OCLoader writer(entities);
             COLLADAFW::Root root(&loader, &writer);
 
             if (!root.loadDocument(fileName))
@@ -79,14 +80,13 @@ namespace Amber
                 throw std::runtime_error("Unable to load COLLADA document.");
             }
 
-            return rootNode;
+            return entities;
         }
 
-        ColladaModelLoader::OCLoader::OCLoader(Core::Node *rootNode)
-            : rootNode(rootNode)
+        ColladaModelLoader::OCLoader::OCLoader(std::vector<Core::Entity> &entities)
+            : entities(entities)
         {
         }
-        */
 
         ColladaModelLoader::OCLoader::~OCLoader()
         {

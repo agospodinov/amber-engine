@@ -1,7 +1,9 @@
 #ifndef IMODELLOADER_H
 #define IMODELLOADER_H
 
-#include <memory>
+#include <vector>
+
+#include "Amber/Core/Entity.h"
 
 namespace Amber
 {
@@ -12,7 +14,7 @@ namespace Amber
             public:
                 virtual ~IModelLoader() = default;
 
-//                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName) = 0;
+                virtual std::vector<Core::Entity> loadModel(const std::string &fileName) = 0;
         };
     }
 }

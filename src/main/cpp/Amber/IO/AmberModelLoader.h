@@ -3,6 +3,10 @@
 
 #include "Amber/IO/IModelLoader.h"
 
+#include <vector>
+
+#include "Amber/Core/Entity.h"
+
 namespace Amber
 {
     namespace IO
@@ -12,7 +16,7 @@ namespace Amber
             public:
                 AmberModelLoader() = default;
 
-//                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName);
+                virtual std::vector<Core::Entity> loadModel(const std::string &fileName);
         };
     }
 }
