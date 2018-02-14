@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "Amber/Core/IComponent.h"
 #include "Amber/Rendering/IObject.h"
 
 #include <memory>
@@ -18,7 +19,7 @@ namespace Amber
 {
     namespace Rendering
     {
-        class Mesh : public IObject
+        class Mesh : public IObject, public Core::IComponent
         {
             public:
                 Mesh();
