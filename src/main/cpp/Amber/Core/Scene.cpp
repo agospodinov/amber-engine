@@ -7,16 +7,14 @@ namespace Amber
 {
     namespace Core
     {
-        Scene::Scene()
+        Scene::Scene(std::vector<Entity> entities)
+            : entities(std::move(entities))
         {
         }
 
 
         Scene::Scene(Scene &&other) noexcept
-        {
-        }
-
-        Scene::~Scene()
+            : entities(std::move(other.entities))
         {
         }
 
@@ -24,9 +22,20 @@ namespace Amber
         {
             if (this != &other)
             {
+                entities = std::move(other.entities);
             }
 
             return *this;
+        }
+
+        std::vector<Entity> &Scene::getEntities()
+        {
+            return entities;
+        }
+
+        const std::vector<Entity> &Scene::getEntities() const
+        {
+            return entities;
         }
     }
 }

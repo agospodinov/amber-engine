@@ -3,6 +3,7 @@ set(CORE_LIB_SOURCES
     Player.cpp          Player.h
     Round.cpp           Round.h
     Scene.cpp           Scene.h
+    Entity.cpp          Entity.h
 
     ISystem.cpp         ISystem.h
 )

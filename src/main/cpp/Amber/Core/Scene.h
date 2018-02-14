@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+#include "Amber/Core/Entity.h"
+
 namespace Amber
 {
     namespace Core
@@ -11,19 +13,20 @@ namespace Amber
         class Scene
         {
             public:
-                Scene();
+                Scene() = default;
+                Scene(std::vector<Entity> entities);
                 Scene(const Scene &other) = delete;
                 Scene(Scene &&other) noexcept;
-                virtual ~Scene();
+                ~Scene() = default;
 
                 Scene &operator =(const Scene &other) = delete;
                 Scene &operator =(Scene &&other) noexcept;
 
-//                Node *getWorldNode();
-//                const Node *getWorldNode() const;
+                std::vector<Entity> &getEntities();
+                const std::vector<Entity> &getEntities() const;
 
             private:
-//                std::unique_ptr<Node> worldNode;
+                std::vector<Entity> entities;
         };
     }
 }
