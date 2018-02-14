@@ -34,10 +34,13 @@ namespace Amber
             }
 
             // TODO fix compiler warning
-            return VertexComponentArray(static_cast<std::uint8_t *>(data.get()) + layout.getOffset(index), attribute, layout.getTotalStride());
+            return VertexComponentArray(static_cast<std::uint8_t *>(data.get()) + layout.getOffset(index),
+                                        attribute, layout.getTotalStride());
         }
 
-        VertexComponentArray::VertexComponentArray(std::uint8_t *subdata, const Layout::Attribute *attribute, std::size_t totalStride)
+        VertexComponentArray::VertexComponentArray(std::uint8_t *subdata,
+                                                   const Layout::Attribute *attribute,
+                                                   std::size_t totalStride)
             : subdata(subdata),
               attribute(attribute),
               totalStride(totalStride)
@@ -104,7 +107,9 @@ namespace Amber
         template <typename InputType, typename DestinationType>
         void Vertex::transform(const InputType *data)
         {
-            std::transform(data, data + attribute->getCount(), reinterpret_cast<DestinationType *>(vertexData), [](InputType item) -> DestinationType
+            std::transform(data, data + attribute->getCount(),
+                           reinterpret_cast<DestinationType *>(vertexData),
+                           [](InputType item) -> DestinationType
             {
                 return static_cast<DestinationType>(item);
             });
