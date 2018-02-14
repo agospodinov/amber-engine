@@ -6,6 +6,7 @@ set(CORE_LIB_SOURCES
     Entity.cpp          Entity.h
 
     ISystem.cpp         ISystem.h
+    IComponent.cpp      IComponent.h
 )
 
 #include_directories()
