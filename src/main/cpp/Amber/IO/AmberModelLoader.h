@@ -12,7 +12,7 @@ namespace Amber
             public:
                 AmberModelLoader() = default;
 
-                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName);
+//                virtual std::unique_ptr<Core::Node> loadModel(const std::string &fileName);
         };
     }
 }

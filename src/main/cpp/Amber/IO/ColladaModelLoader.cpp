@@ -9,7 +9,6 @@
 #include <COLLADAFW.h>
 #include <COLLADASaxFWLLoader.h>
 
-#include "Amber/Core/Node.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Reference.h"
@@ -26,7 +25,7 @@ namespace Amber
         class ColladaModelLoader::OCLoader : public COLLADAFW::IWriter
         {
             public:
-                OCLoader(Core::Node *rootNode);
+//                OCLoader(Core::Node *rootNode);
                 virtual ~OCLoader();
 
                 virtual void cancel(const COLLADAFW::String& errorMessage);
@@ -52,10 +51,10 @@ namespace Amber
 
             private:
                 Rendering::Reference<Rendering::ITexture> findTexture(const COLLADAFW::Texture &texture, const COLLADAFW::SamplerPointerArray &samplers);
-                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode);
+//                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode);
 
                 Utilities::Logger log;
-                Core::Node *rootNode;
+//                Core::Node *rootNode;
 
                 std::map<COLLADAFW::UniqueId, Rendering::Mesh> meshes;
                 std::map<COLLADAFW::UniqueId, Rendering::Material> effects;
@@ -66,6 +65,7 @@ namespace Amber
                 std::map<COLLADAFW::UniqueId, COLLADAFW::UniqueId> effectsByMaterial;
         };
 
+        /*
         std::unique_ptr<Core::Node> ColladaModelLoader::loadModel(const std::string &fileName)
         {
             std::unique_ptr<Core::Node> rootNode(new Core::Node());
@@ -86,6 +86,7 @@ namespace Amber
             : rootNode(rootNode)
         {
         }
+        */
 
         ColladaModelLoader::OCLoader::~OCLoader()
         {
@@ -130,8 +131,8 @@ namespace Amber
                              0,-1, 0, 0,
                              0, 0, 0, 1;
 
-            rootNode->setLocalTransform(axisFixMatrix);
-            traverseNodes(visualScene->getRootNodes(), rootNode);
+//            rootNode->setLocalTransform(axisFixMatrix);
+//            traverseNodes(visualScene->getRootNodes(), rootNode);
 
             return true;
         }
@@ -343,6 +344,7 @@ namespace Amber
             return Rendering::Reference<Rendering::ITexture>();
         }
 
+        /*
         void ColladaModelLoader::OCLoader::traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode)
         {
             for (std::size_t i = 0; i < nodes.getCount(); i++)
@@ -410,6 +412,7 @@ namespace Amber
                 parentNode->addChild(std::move(node));
             }
         }
+        */
     }
 }
 

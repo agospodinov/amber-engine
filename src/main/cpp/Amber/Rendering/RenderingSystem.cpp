@@ -2,7 +2,6 @@
 
 #include "Amber/Utilities/Config.h"
 
-#include "Amber/Core/Node.h"
 #include "Amber/IO/ShaderLoader.h"
 #include "Amber/Rendering/Camera.h"
 #include "Amber/Rendering/OpenGL4/OpenGL4Renderer.h"
