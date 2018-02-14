@@ -4,6 +4,7 @@ set(CORE_LIB_SOURCES
     Round.cpp           Round.h
     Scene.cpp           Scene.h
     Entity.cpp          Entity.h
+    Transform.cpp       Transform.h
 
     ISystem.cpp         ISystem.h
     IComponent.cpp      IComponent.h
