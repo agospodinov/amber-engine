@@ -52,6 +52,7 @@ namespace Amber
                 virtual bool writeKinematicsScene(const COLLADAFW::KinematicsScene* kinematicsScene);
 
             private:
+                Eigen::Vector4f convertColor(const COLLADAFW::Color &color);
                 Rendering::Reference<Rendering::ITexture> findTexture(const COLLADAFW::Texture &texture, const COLLADAFW::SamplerPointerArray &samplers);
                 void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Transform *parentTransform);
 
@@ -239,6 +240,10 @@ namespace Amber
                 {
                     material.setDiffuseTexture(findTexture(commonEffect->getDiffuse().getTexture(), samplers));
                 }
+                else if (commonEffect->getDiffuse().isColor())
+                {
+                    material.setDiffuseColor(convertColor(commonEffect->getDiffuse().getColor()));
+                }
 
                 if (commonEffect->getSpecular().isTexture())
                 {
@@ -329,6 +334,11 @@ namespace Amber
             log.trace("Loading kinematics scene...");
 
             return true;
+        }
+
+        Eigen::Vector4f ColladaModelLoader::OCLoader::convertColor(const COLLADAFW::Color &color)
+        {
+            return Eigen::Vector4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         }
 
         Rendering::Reference<Rendering::ITexture> ColladaModelLoader::OCLoader::findTexture(const COLLADAFW::Texture &texture, const COLLADAFW::SamplerPointerArray &samplers)

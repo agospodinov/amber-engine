@@ -9,7 +9,8 @@ namespace Amber
               translucency(0),
               reflectivity(0),
               indexOfRefraction(1),
-              subsurfaceScattering(false)
+              subsurfaceScattering(false),
+              diffuseColor(Eigen::Vector4f(0, 0, 0, 0))
         {
         }
 
@@ -51,6 +52,16 @@ namespace Amber
         void Material::setIndexOfRefraction(float indexOfRefraction)
         {
             this->indexOfRefraction = indexOfRefraction;
+        }
+
+        const Eigen::Vector4f &Material::getDiffuseColor() const
+        {
+            return diffuseColor;
+        }
+
+        void Material::setDiffuseColor(Eigen::Vector4f diffuseColor)
+        {
+            this->diffuseColor = std::move(diffuseColor);
         }
 
         Reference<ITexture> Material::getDiffuseTexture() const
