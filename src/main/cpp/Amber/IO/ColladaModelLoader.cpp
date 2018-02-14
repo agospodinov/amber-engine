@@ -10,6 +10,7 @@
 #include <COLLADASaxFWLLoader.h>
 
 #include "Amber/Core/Entity.h"
+#include "Amber/Core/Transform.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Reference.h"
@@ -52,7 +53,7 @@ namespace Amber
 
             private:
                 Rendering::Reference<Rendering::ITexture> findTexture(const COLLADAFW::Texture &texture, const COLLADAFW::SamplerPointerArray &samplers);
-//                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode);
+                void traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Transform *parentTransform);
 
                 Utilities::Logger log;
                 std::vector<Core::Entity> &entities;
@@ -131,8 +132,8 @@ namespace Amber
                              0,-1, 0, 0,
                              0, 0, 0, 1;
 
-//            rootNode->setLocalTransform(axisFixMatrix);
-//            traverseNodes(visualScene->getRootNodes(), rootNode);
+            Core::Transform rootTransform(axisFixMatrix);
+            traverseNodes(visualScene->getRootNodes(), &rootTransform);
 
             return true;
         }
@@ -344,13 +345,11 @@ namespace Amber
             return Rendering::Reference<Rendering::ITexture>();
         }
 
-        /*
-        void ColladaModelLoader::OCLoader::traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Node *parentNode)
+        void ColladaModelLoader::OCLoader::traverseNodes(const COLLADAFW::NodePointerArray &nodes, Core::Transform *parentTransform)
         {
             for (std::size_t i = 0; i < nodes.getCount(); i++)
             {
                 COLLADAFW::Node *colladaNode = nodes[i];
-                std::unique_ptr<Core::Node> node(new Core::Node());
 
                 // FIXME might have to change to (COLLADAFW::Matrix *) getTransformations()[0]
                 COLLADABU::Math::Matrix4 m = colladaNode->getTransformationMatrix();
@@ -360,20 +359,21 @@ namespace Amber
                                m[2][0], m[2][1], m[2][2], m[2][3],
                                m[3][0], m[3][1], m[3][2], m[3][3];
 
-                node->setLocalTransform(modelMatrix);
+                Core::Transform transformComponent(modelMatrix, parentTransform);
+                transformComponent.flatten(); // FIXME find way to share transform across entities
 
                 const COLLADAFW::InstanceGeometryPointerArray &geometries = colladaNode->getInstanceGeometries();
 
                 for (std::size_t j = 0; j < geometries.getCount(); j++)
                 {
                     COLLADAFW::InstanceGeometry *geometry = geometries[j];
-                    std::unique_ptr<Core::Node> modelNode(new Core::Node());
 
                     auto meshesIt = meshesByModel.equal_range(geometry->getInstanciatedObjectId());
 
                     for (auto it = meshesIt.first; it != meshesIt.second; it++)
                     {
-                        std::unique_ptr<Core::Node> meshNode(new Core::Node());
+                        Core::Entity entity;
+                        entity.addComponent(std::unique_ptr<Core::Transform>(new Core::Transform(transformComponent)));
 
                         Rendering::Mesh &mesh = meshes.at(it->second);
                         Rendering::Material material;
@@ -396,23 +396,18 @@ namespace Amber
                             }
                         }
 
-//                        meshNode->addComponent(std::unique_ptr<Rendering::Mesh>(new Rendering::Mesh(std::move(mesh))));
-//                        meshNode->addComponent(std::unique_ptr<Rendering::Material>(new Rendering::Material(std::move(material))));
+                        entity.addComponent(std::unique_ptr<Rendering::Mesh>(new Rendering::Mesh(std::move(mesh))));
+                        entity.addComponent(std::unique_ptr<Rendering::Material>(new Rendering::Material(std::move(material))));
 
-                        modelNode->addChild(std::move(meshNode));
+                        entities.push_back(std::move(entity));
                     }
-
-                    node->addChild(std::move(modelNode));
                 }
 
 //                colladaNode->getInstanceLights()
 
-                traverseNodes(colladaNode->getChildNodes(), node.get());
-
-                parentNode->addChild(std::move(node));
+                traverseNodes(colladaNode->getChildNodes(), &transformComponent);
             }
         }
-        */
     }
 }
 
