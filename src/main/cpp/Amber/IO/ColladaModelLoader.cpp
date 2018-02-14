@@ -11,6 +11,7 @@
 
 #include "Amber/Core/Entity.h"
 #include "Amber/Core/Transform.h"
+#include "Amber/Rendering/Light.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Reference.h"
@@ -62,6 +63,7 @@ namespace Amber
                 std::map<COLLADAFW::UniqueId, Rendering::Mesh> meshes;
                 std::map<COLLADAFW::UniqueId, Rendering::Material> effects;
                 std::map<COLLADAFW::UniqueId, Rendering::Reference<Rendering::ITexture>> textures;
+                std::map<COLLADAFW::UniqueId, Rendering::Light> lights;
 
                 std::multimap<COLLADAFW::UniqueId, COLLADAFW::UniqueId> meshesByModel;
                 std::map<COLLADAFW::UniqueId, COLLADAFW::MaterialId> materialsByMesh;
@@ -291,6 +293,32 @@ namespace Amber
         {
             log.trace("Loading light: " + light->getName());
 
+            using Amber::Rendering::Light;
+
+            Light::Type lightType;
+            switch (light->getLightType())
+            {
+            case COLLADAFW::Light::DIRECTIONAL_LIGHT:
+                lightType = Light::Type::Directional;
+                break;
+            case COLLADAFW::Light::POINT_LIGHT:
+                lightType = Light::Type::Point;
+                break;
+            case COLLADAFW::Light::SPOT_LIGHT:
+                lightType = Light::Type::Spotlight;
+                break;
+            default:
+                return true;
+            }
+
+            Light l(lightType);
+            l.setColor(convertColor(light->getColor()));
+            l.setAttenuationCoefficients(Eigen::Vector3f(light->getConstantAttenuation(),
+                                                         light->getLinearAttenuation(),
+                                                         light->getQuadraticAttenuation()));
+
+            lights.emplace(light->getUniqueId(), std::move(l));
+
             return true;
         }
 
@@ -413,7 +441,18 @@ namespace Amber
                     }
                 }
 
-//                colladaNode->getInstanceLights()
+                const COLLADAFW::InstanceLightPointerArray &instanceLights = colladaNode->getInstanceLights();
+                for (int j = 0; j < instanceLights.getCount(); j++)
+                {
+                    COLLADAFW::InstanceLight *light = instanceLights[j];
+                    Rendering::Light l = lights.at(light->getInstanciatedObjectId());
+
+                    Core::Entity entity;
+                    entity.addComponent(std::unique_ptr<Core::Transform>(new Core::Transform(transformComponent)));
+                    entity.addComponent(std::unique_ptr<Rendering::Light>(new Rendering::Light(std::move(l))));
+
+                    entities.push_back(std::move(entity));
+                }
 
                 traverseNodes(colladaNode->getChildNodes(), &transformComponent);
             }
