@@ -14,16 +14,6 @@ namespace Amber
         {
         }
 
-        Core::IComponent::Type Camera::getType() const
-        {
-            return IComponent::Type::Camera;
-        }
-
-        bool Camera::isSetup() const
-        {
-            return true;
-        }
-
         void Camera::setLookAt(const Eigen::Vector3f &eye, const Eigen::Vector3f &center, const Eigen::Vector3f &up)
         {
             Eigen::Vector3f f = (center - eye).normalized();

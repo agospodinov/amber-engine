@@ -8,8 +8,6 @@
 
 #include <Eigen/Core>
 
-#include "Amber/Core/IComponent.h"
-
 namespace Amber
 {
     namespace Core
@@ -18,9 +16,6 @@ namespace Amber
         {
             public:
                 Node();
-
-                IComponent *getComponent(IComponent::Type type) const;
-                void addComponent(std::unique_ptr<IComponent> component);
 
                 const std::vector<std::unique_ptr<Node>> &getChildren() const;
                 void addChild(std::unique_ptr<Node> node);
@@ -40,7 +35,6 @@ namespace Amber
                 const Node *parent;
                 std::vector<std::unique_ptr<Node>> children;
 
-                std::map<IComponent::Type, std::unique_ptr<IComponent>> components;
                 Eigen::Matrix4f localTransform;
 
                 mutable bool dirty;

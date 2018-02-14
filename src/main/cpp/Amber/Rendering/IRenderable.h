@@ -1,15 +1,13 @@
 #ifndef IRENDERABLE_H
 #define IRENDERABLE_H
 
-#include "Amber/Core/IComponent.h"
-
 #include "Amber/Rendering/ForwardDeclarations.h"
 
 namespace Amber
 {
     namespace Rendering
     {
-        class IRenderable : public Core::IComponent
+        class IRenderable
         {
             public:
                 IRenderable() = default;

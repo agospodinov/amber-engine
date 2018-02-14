@@ -13,16 +13,6 @@ namespace Amber
         {
         }
 
-        Core::IComponent::Type Material::getType() const
-        {
-            return Core::IComponent::Type::Material;
-        }
-
-        bool Material::isSetup() const
-        {
-            return true;
-        }
-
         float Material::getEmission() const
         {
             return emission;

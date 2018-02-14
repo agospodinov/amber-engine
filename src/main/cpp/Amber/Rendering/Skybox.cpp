@@ -15,17 +15,6 @@ namespace Amber
 {
     namespace Rendering
     {
-        // FIXME these methods are wrong
-        Core::IComponent::Type Skybox::getType()
-        {
-            return Core::IComponent::Type::Mesh;
-        }
-
-        bool Skybox::isSetup() const
-        {
-            return false;
-        }
-
         void Skybox::setup(IRenderer *renderer)
         {
             const float distance = 1.0f;

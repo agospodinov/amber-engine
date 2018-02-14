@@ -29,8 +29,6 @@ namespace Amber
                 virtual std::size_t getVertexCount() const = 0;
                 virtual std::size_t getPrimitiveCount() const = 0;
                 virtual std::size_t getInstanceCount() const = 0;
-
-                virtual const Eigen::Matrix4f &getLocalTransform() const = 0;
         };
     }
 }

@@ -394,8 +394,8 @@ namespace Amber
                             }
                         }
 
-                        meshNode->addComponent(std::unique_ptr<Rendering::Mesh>(new Rendering::Mesh(std::move(mesh))));
-                        meshNode->addComponent(std::unique_ptr<Rendering::Material>(new Rendering::Material(std::move(material))));
+//                        meshNode->addComponent(std::unique_ptr<Rendering::Mesh>(new Rendering::Mesh(std::move(mesh))));
+//                        meshNode->addComponent(std::unique_ptr<Rendering::Material>(new Rendering::Material(std::move(material))));
 
                         modelNode->addChild(std::move(meshNode));
                     }

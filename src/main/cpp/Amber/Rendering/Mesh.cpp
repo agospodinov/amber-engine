@@ -21,16 +21,6 @@ namespace Amber
             }
         }
 
-        Core::IComponent::Type Mesh::getType() const
-        {
-            return Core::IComponent::Type::Mesh;
-        }
-
-        bool Mesh::isSetup() const
-        {
-            return isInHardwareStorage();
-        }
-
         Reference<IBuffer> &Mesh::getVertexBuffer()
         {
             return vertexBuffer;
@@ -95,11 +85,6 @@ namespace Amber
         std::size_t Mesh::getInstanceCount() const
         {
             return 1;
-        }
-
-        const Eigen::Matrix4f &Mesh::getLocalTransform() const
-        {
-            return Eigen::Matrix4f::Identity();
         }
 
         void Mesh::setLayout(Layout layout)

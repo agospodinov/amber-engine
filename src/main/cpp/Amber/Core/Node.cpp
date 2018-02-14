@@ -11,17 +11,6 @@ namespace Amber
         {
         }
 
-        IComponent *Node::getComponent(IComponent::Type type) const
-        {
-            auto it = components.find(type);
-            return it != components.end() ? it->second.get() : nullptr;
-        }
-
-        void Node::addComponent(std::unique_ptr<IComponent> component)
-        {
-            components.emplace(component->getType(), std::move(component));
-        }
-
         const std::vector<std::unique_ptr<Node>> &Node::getChildren() const
         {
             return children;

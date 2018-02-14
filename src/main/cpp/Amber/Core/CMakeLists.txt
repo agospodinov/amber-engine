@@ -6,7 +6,6 @@ set(CORE_LIB_SOURCES
     Node.cpp            Node.h
 
     ISystem.cpp         ISystem.h
-    IComponent.cpp      IComponent.h
 )
 
 #include_directories()

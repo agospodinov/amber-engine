@@ -20,9 +20,6 @@ namespace Amber
                 Skybox() = default;
                 virtual ~Skybox() = default;
 
-                virtual Type getType();
-                virtual bool isSetup() const;
-
                 virtual void setup(IRenderer *renderer);
                 virtual void render(IRenderer *renderer);
 

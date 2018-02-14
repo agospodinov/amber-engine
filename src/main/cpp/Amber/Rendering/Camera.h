@@ -1,22 +1,17 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Amber/Core/IComponent.h"
-
 #include <Eigen/Core>
 
 namespace Amber
 {
     namespace Rendering
     {
-        class Camera : public Core::IComponent
+        class Camera
         {
             public:
                 Camera();
-                virtual ~Camera() = default;
-
-                virtual Type getType() const override final;
-                virtual bool isSetup() const override final;
+                ~Camera() = default;
 
                 void setLookAt(const Eigen::Vector3f &eye, const Eigen::Vector3f &center, const Eigen::Vector3f &up);
                 void setPerspectiveProjection(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);

@@ -1,8 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "Amber/Core/IComponent.h"
-
 #include <memory>
 
 #include "Amber/Rendering/IProgram.h"
@@ -12,14 +10,11 @@ namespace Amber
 {
     namespace Rendering
     {
-        class Material : public Core::IComponent
+        class Material
         {
             public:
                 Material();
                 ~Material() = default;
-
-                Type getType() const;
-                bool isSetup() const;
 
                 float getEmission() const;
                 void setEmission(float emission);
