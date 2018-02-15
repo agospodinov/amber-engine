@@ -50,6 +50,7 @@ namespace Amber
                     virtual void setConstant(std::string name, float value) override final;
 
                     virtual void setConstant(std::string name, Eigen::Matrix4f value) override final;
+                    virtual void setConstant(std::string name, Eigen::Matrix3f value) override final;
                     virtual void setConstant(std::string name, Eigen::Vector2f value) override final;
                     virtual void setConstant(std::string name, Eigen::Vector3f value) override final;
                     virtual void setConstant(std::string name, Eigen::Vector4f value) override final;

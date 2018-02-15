@@ -186,6 +186,11 @@ namespace Amber
                 glUniformMatrix4fv(findConstantByName(name), 1, value.IsRowMajor, value.data());
             }
 
+            void OpenGL4Program::setConstant(std::string name, Eigen::Matrix3f value)
+            {
+                glUniformMatrix3fv(findConstantByName(name), 1, value.IsRowMajor, value.data());
+            }
+
             void OpenGL4Program::setConstant(std::string name, Eigen::Vector2f value)
             {
                 glUniform2fv(findConstantByName(name), 1, value.data());

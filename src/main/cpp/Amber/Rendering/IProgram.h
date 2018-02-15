@@ -36,6 +36,7 @@ namespace Amber
                 virtual void setConstant(std::string name, float value) = 0;
 
                 virtual void setConstant(std::string name, Eigen::Matrix4f value) = 0;
+                virtual void setConstant(std::string name, Eigen::Matrix3f value) = 0;
                 virtual void setConstant(std::string name, Eigen::Vector2f value) = 0;
                 virtual void setConstant(std::string name, Eigen::Vector3f value) = 0;
                 virtual void setConstant(std::string name, Eigen::Vector4f value) = 0;
