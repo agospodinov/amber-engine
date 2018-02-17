@@ -23,6 +23,12 @@ namespace Amber
                 Entity &operator =(Entity &&other) noexcept;
 
                 template <typename T>
+                bool hasComponent() const
+                {
+                    return getComponent<T>() != nullptr;
+                }
+
+                template <typename T>
                 const T *getComponent() const
                 {
                     using Amber::Utilities::ClassTypeId;
