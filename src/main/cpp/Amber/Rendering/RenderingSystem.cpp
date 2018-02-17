@@ -36,6 +36,11 @@ namespace Amber
 
         void RenderingSystem::registerEntity(Core::Entity &entity)
         {
+            registerProxy<Mesh, Material, Core::Transform>(entity, [=] (auto p) {
+                renderer->prepare(*p.template get<Mesh>());
+                meshes.push_back(p);
+            });
+            registerProxy<Light, Core::Transform>(entity, [=] (auto p) { lights.push_back(p); });
         }
 
         void RenderingSystem::handleWindowResize(int width, int height)
