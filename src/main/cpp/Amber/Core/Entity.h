@@ -1,8 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <algorithm>
 #include <memory>
+#include <tuple>
 #include <unordered_map>
+#include <utility>
 
 #include "Amber/Core/IComponent.h"
 #include "Amber/Utilities/ClassTypeId.h"
@@ -14,6 +17,33 @@ namespace Amber
         class Entity
         {
             public:
+                template <typename... Ts>
+                class Proxy
+                {
+                    public:
+                        template <typename U>
+                        U *get()
+                        {
+                            return std::get<U *>(components);
+                        }
+
+                        bool isValid()
+                        {
+                            bool valid[] = { (std::get<Ts *>(components) != nullptr)... };
+                            return std::all_of(std::begin(valid), std::end(valid), [] (bool b) { return b; });
+                        }
+
+                    private:
+                        friend class Entity;
+
+                        Proxy(std::tuple<Ts *...> components)
+                            : components(components)
+                        {
+                        }
+
+                        std::tuple<Ts *...> components;
+                };
+
                 Entity() = default;
                 Entity(const Entity &other) = delete;
                 Entity(Entity &&other) noexcept;
@@ -21,6 +51,12 @@ namespace Amber
 
                 Entity &operator =(const Entity &other) = delete;
                 Entity &operator =(Entity &&other) noexcept;
+
+                template <typename... Ts>
+                Entity::Proxy<Ts...> getProxy()
+                {
+                    return Proxy<Ts...>(std::make_tuple(getComponent<Ts>()...));
+                }
 
                 template <typename T>
                 bool hasComponent() const
