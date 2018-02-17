@@ -26,6 +26,8 @@ namespace Amber
                 const std::vector<Entity> &getEntities() const;
 
             private:
+                friend class Game;
+
                 std::vector<Entity> entities;
         };
     }

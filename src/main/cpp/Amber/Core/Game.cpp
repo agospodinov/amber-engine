@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "Amber/Rendering/RenderingSystem.h"
+#include "Amber/Core/Scene.h"
 
 namespace Amber
 {
@@ -29,6 +29,14 @@ namespace Amber
         void Game::setScene(Scene scene)
         {
             this->scene = std::move(scene);
+
+            for (Entity &entity : this->scene.entities)
+            {
+                for (const std::unique_ptr<ISystem> &system : systems)
+                {
+                    system->registerEntity(entity);
+                }
+            }
         }
     }
 }
