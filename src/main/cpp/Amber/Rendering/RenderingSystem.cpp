@@ -34,6 +34,10 @@ namespace Amber
             // FIXME no-op
         }
 
+        void RenderingSystem::registerEntity(Core::Entity &entity)
+        {
+        }
+
         void RenderingSystem::handleWindowResize(int width, int height)
         {
             renderer->getViewport().resize(width, height);

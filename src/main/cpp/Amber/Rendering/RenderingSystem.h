@@ -23,6 +23,8 @@ namespace Amber
                 virtual void runSingleIteration();
                 virtual void run();
 
+                virtual void registerEntity(Core::Entity &entity) override;
+
                 void handleWindowResize(int width, int height);
 
             private:
