@@ -22,7 +22,6 @@ endif(WIN32)
 
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 include_directories("${PROJECT_SOURCE_DIR}/${SOURCE_MAIN_CPP_DIR}" "${PROJECT_BINARY_DIR}/${SOURCE_MAIN_CPP_DIR}")
-add_definitions("-std=c++11")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/Utilities/Config.h)
 
