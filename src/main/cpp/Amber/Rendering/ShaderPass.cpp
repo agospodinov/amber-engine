@@ -17,10 +17,5 @@ namespace Amber
         {
             return program;
         }
-
-        void ShaderPass::setup(IRenderer *renderer)
-        {
-            renderer->prepare(program);
-        }
     }
 }

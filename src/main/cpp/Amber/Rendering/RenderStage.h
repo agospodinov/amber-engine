@@ -32,8 +32,6 @@ namespace Amber
                 bool shouldClearBeforeRendering() const;
                 void setClearBeforeRendering(bool clearBeforeRendering);
 
-                void setup(IRenderer *renderer);
-
             private:
                 Reference<IRenderTarget> renderTarget;
                 std::vector<ShaderPass> shaderPasses;

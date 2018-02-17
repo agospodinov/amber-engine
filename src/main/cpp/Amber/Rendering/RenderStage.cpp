@@ -43,11 +43,5 @@ namespace Amber
         {
             shaderPasses.push_back(std::move(shaderPass));
         }
-
-        void RenderStage::setup(IRenderer *renderer)
-        {
-            renderer->prepare(renderTarget);
-            std::for_each(shaderPasses.begin(), shaderPasses.end(), std::bind(&ShaderPass::setup, std::placeholders::_1, renderer));
-        }
     }
 }

@@ -197,6 +197,15 @@ namespace Amber
             void OpenGL4Renderer::setProcedure(Procedure procedure)
             {
                 this->procedure = std::move(procedure);
+
+                for (RenderStage &renderStage : this->procedure.getRenderStages())
+                {
+                    prepare(renderStage.getRenderTarget());
+                    for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
+                    {
+                        prepare(shaderPass.getProgram());
+                    }
+                }
             }
 
 

@@ -23,8 +23,6 @@ namespace Amber
 
                 Reference<IProgram> getProgram() const;
 
-                void setup(IRenderer *renderer);
-
             private:
                 Reference<IProgram> program;
         };
