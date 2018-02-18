@@ -37,10 +37,6 @@ namespace Amber
                 virtual bool getRenderOption(RenderOption renderOption) const = 0;
                 virtual void setRenderOption(RenderOption renderOption, bool enabled) = 0;
 
-                virtual Procedure &getProcedure() = 0;
-                virtual const Procedure &getProcedure() const = 0;
-                virtual void setProcedure(Procedure procedure) = 0;
-
                 virtual IContext &getContext() = 0;
                 virtual Viewport &getViewport() = 0;
         };

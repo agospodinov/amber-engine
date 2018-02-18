@@ -6,7 +6,6 @@
 #include "Amber/Core/Transform.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Material.h"
-#include "Amber/Rendering/RenderStage.h"
 #include "Amber/Rendering/Backend/IObject.h"
 #include "Amber/Rendering/Backend/IRenderTarget.h"
 #include "Amber/Rendering/Backend/BindLock.h"
@@ -187,31 +186,6 @@ namespace Amber
                     glDisable(propertyId);
                 }
             }
-
-            Procedure &OpenGL4Renderer::getProcedure()
-            {
-                return procedure;
-            }
-
-            const Procedure &OpenGL4Renderer::getProcedure() const
-            {
-                return procedure;
-            }
-
-            void OpenGL4Renderer::setProcedure(Procedure procedure)
-            {
-                this->procedure = std::move(procedure);
-
-                for (RenderStage &renderStage : this->procedure.getRenderStages())
-                {
-                    prepare(renderStage.getRenderTarget());
-                    for (const ShaderPass &shaderPass : renderStage.getShaderPasses())
-                    {
-                        prepare(shaderPass.getProgram());
-                    }
-                }
-            }
-
 
             IContext &OpenGL4Renderer::getContext()
             {

@@ -23,9 +23,6 @@ namespace Amber
         class Light;
         class Material;
         class Mesh;
-        class Procedure;
-        class RenderStage;
-        class ShaderPass;
         class Viewport;
     }
 }

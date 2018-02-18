@@ -5,9 +5,6 @@ set(RENDERING_LIB_SOURCES
     Light.cpp           Light.h
     Scene.cpp           Scene.h
 
-    Procedure.cpp       Procedure.h
-    RenderStage.cpp     RenderStage.h
-    ShaderPass.cpp      ShaderPass.h
     Viewport.cpp        Viewport.h
     RenderingSystem.cpp RenderingSystem.h
 

@@ -6,7 +6,6 @@
 #include <deque>
 
 #include "Amber/Rendering/ForwardDeclarations.h"
-#include "Amber/Rendering/Procedure.h"
 #include "Amber/Rendering/Viewport.h"
 #include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 #include "Amber/Rendering/Backend/OpenGL4/OpenGL4Context.h"
@@ -36,10 +35,6 @@ namespace Amber
                     virtual bool getRenderOption(RenderOption renderOption) const override final;
                     virtual void setRenderOption(RenderOption renderOption, bool enabled) override final;
 
-                    virtual Procedure &getProcedure() override final;
-                    virtual const Procedure &getProcedure() const override final;
-                    virtual void setProcedure(Procedure procedure) override final;
-
                     virtual IContext &getContext() override final;
                     virtual Viewport &getViewport() override final;
 
@@ -48,7 +43,6 @@ namespace Amber
 
                     OpenGL4Context context;
                     Viewport viewport;
-                    Procedure procedure;
             };
         }
     }

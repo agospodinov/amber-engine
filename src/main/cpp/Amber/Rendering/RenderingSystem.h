@@ -8,7 +8,6 @@
 #include "Amber/Core/Game.h"
 #include "Amber/Rendering/Backend/IRenderer.h"
 #include "Amber/Rendering/IRenderingStrategy.h"
-#include "Amber/Rendering/Procedure.h"
 #include "Amber/Rendering/Scene.h"
 
 namespace Amber
@@ -31,8 +30,6 @@ namespace Amber
                 void handleWindowResize(int width, int height);
 
             private:
-                Procedure getDefaultProcedure();
-
                 Scene scene;
                 std::unique_ptr<IRenderer> renderer;
                 std::unique_ptr<IRenderingStrategy> renderingStrategy;
