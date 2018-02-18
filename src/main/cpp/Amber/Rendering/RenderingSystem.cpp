@@ -4,7 +4,7 @@
 
 #include "Amber/IO/ShaderLoader.h"
 #include "Amber/Rendering/Camera.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Renderer.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Renderer.h"
 
 namespace Amber
 {

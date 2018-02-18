@@ -1,16 +1,16 @@
 #ifndef OPENGL4CONTEXT_H
 #define OPENGL4CONTEXT_H
 
-#include "Amber/Rendering/IContext.h"
+#include "Amber/Rendering/Backend/IContext.h"
 
 #include <memory>
 
-#include "Amber/Rendering/IBuffer.h"
-#include "Amber/Rendering/IShader.h"
-#include "Amber/Rendering/ITexture.h"
-#include "Amber/Rendering/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4VertexArray.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/IShader.h"
+#include "Amber/Rendering/Backend/ITexture.h"
+#include "Amber/Rendering/Backend/Reference.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4VertexArray.h"
 
 namespace Amber
 {

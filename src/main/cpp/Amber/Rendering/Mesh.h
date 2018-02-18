@@ -2,18 +2,16 @@
 #define MESH_H
 
 #include "Amber/Core/IComponent.h"
-#include "Amber/Rendering/IObject.h"
+#include "Amber/Rendering/Backend/IObject.h"
 
 #include <memory>
 #include <vector>
 
 #include <Eigen/Core>
 
-#include "Amber/Rendering/Layout.h"
-#include "Amber/Rendering/Reference.h"
-#include "Amber/Rendering/VertexTypes.h"
-
-#include "Amber/Rendering/ForwardDeclarations.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/Reference.h"
+#include "Amber/Rendering/Backend/VertexTypes.h"
 
 namespace Amber
 {

@@ -7,10 +7,11 @@
 
 #include "Amber/Core/Game.h"
 #include "Amber/Core/Transform.h"
-#include "Amber/Rendering/IRenderer.h"
+#include "Amber/Rendering/Backend/IRenderer.h"
 #include "Amber/Rendering/Mesh.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Light.h"
+#include "Amber/Rendering/Procedure.h"
 
 namespace Amber
 {

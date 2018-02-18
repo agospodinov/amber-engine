@@ -1,14 +1,15 @@
 #ifndef OPENGL4RENDERER_H
 #define OPENGL4RENDERER_H
 
-#include "Amber/Rendering/IRenderer.h"
+#include "Amber/Rendering/Backend/IRenderer.h"
 
 #include <deque>
 
+#include "Amber/Rendering/ForwardDeclarations.h"
 #include "Amber/Rendering/Procedure.h"
 #include "Amber/Rendering/Viewport.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Context.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Context.h"
 
 namespace Amber
 {

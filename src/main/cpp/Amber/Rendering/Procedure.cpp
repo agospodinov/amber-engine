@@ -1,7 +1,5 @@
 #include "Procedure.h"
 
-#include "Amber/IO/ShaderLoader.h"
-
 namespace Amber
 {
     namespace Rendering

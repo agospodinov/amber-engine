@@ -4,6 +4,7 @@
 #include <deque>
 
 #include "Amber/Core/Scene.h"
+#include "Amber/Rendering/Backend/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
 
 namespace Amber

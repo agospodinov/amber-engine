@@ -1,13 +1,13 @@
 #ifndef OPENGL4TEXTURE_H
 #define OPENGL4TEXTURE_H
 
-#include "Amber/Rendering/ITexture.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/ITexture.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
 #include <cstdlib>
 #include <cstdint>
 
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

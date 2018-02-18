@@ -3,11 +3,10 @@
 #include <algorithm>
 #include <functional>
 
-#include "IBindable.h"
-#include "IProgram.h"
-#include "IRenderer.h"
-#include "BindLock.h"
-#include "Reference.h"
+#include "Amber/Rendering/Backend/IBindable.h"
+#include "Amber/Rendering/Backend/IProgram.h"
+#include "Amber/Rendering/Backend/IRenderer.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

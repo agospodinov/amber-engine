@@ -5,7 +5,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/Reference.h"
 #include "AssetManager.h"
 
 namespace Amber

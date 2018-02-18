@@ -1,9 +1,5 @@
 #include "ShaderPass.h"
 
-#include "IRenderer.h"
-#include "BindLock.h"
-#include "Scene.h"
-
 namespace Amber
 {
     namespace Rendering

@@ -1,12 +1,12 @@
 #ifndef OPENGL4VERTEXARRAY_H
 #define OPENGL4VERTEXARRAY_H
 
-#include "Amber/Rendering/IBindable.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/IBindable.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
-#include "Amber/Rendering/Layout.h"
-#include "Amber/Rendering/Reference.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/Reference.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

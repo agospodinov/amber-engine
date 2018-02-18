@@ -1,12 +1,12 @@
 #ifndef OPENGL4SHADER_H
 #define OPENGL4SHADER_H
 
-#include "Amber/Rendering/IShader.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/IShader.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
 #include <string>
 
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

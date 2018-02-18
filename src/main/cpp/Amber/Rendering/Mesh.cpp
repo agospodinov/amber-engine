@@ -1,8 +1,8 @@
 #include "Mesh.h"
 
 #include "Amber/Utilities/Logger.h"
-#include "IBuffer.h"
-#include "IContext.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/IContext.h"
 
 namespace Amber
 {

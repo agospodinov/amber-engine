@@ -1,15 +1,15 @@
 #ifndef OPENGL4PROGRAM_H
 #define OPENGL4PROGRAM_H
 
-#include "Amber/Rendering/IProgram.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/IProgram.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
 #include <map>
 #include <memory>
 #include <vector>
 
-#include "Amber/Rendering/Layout.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

@@ -1,8 +1,8 @@
 #ifndef SHADERPASS_H
 #define SHADERPASS_H
 
-#include "Amber/Rendering/IProgram.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/IProgram.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 #include "Amber/Rendering/ForwardDeclarations.h"
 

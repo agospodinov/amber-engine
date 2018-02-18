@@ -1,7 +1,7 @@
 #ifndef REFERENCE_H
 #define REFERENCE_H
 
-#include "IContext.h"
+#include "Amber/Rendering/Backend/IContext.h"
 
 namespace Amber
 {
@@ -66,6 +66,6 @@ namespace Amber
     }
 }
 
-#include "Amber/Rendering/Reference.txx"
+#include "Amber/Rendering/Backend/Reference.txx"
 
 #endif // REFERENCE_H

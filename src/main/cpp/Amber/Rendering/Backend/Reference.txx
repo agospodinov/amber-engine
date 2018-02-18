@@ -77,7 +77,7 @@ namespace Amber
         Reference<ValueType>::operator Reference<NewType>() const
         {
             static_assert(std::is_base_of<NewType, ValueType>::value, "Value is not implicitly convertible");
-            NewType *newValue = dynamic_cast<NewType *>(value);
+            NewType *newValue = static_cast<NewType *>(value);
             return (newValue != nullptr) ? Reference<NewType>(context, newValue) : Reference<NewType>();
         }
 

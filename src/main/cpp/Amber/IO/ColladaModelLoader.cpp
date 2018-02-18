@@ -14,7 +14,7 @@
 #include "Amber/Rendering/Light.h"
 #include "Amber/Rendering/Material.h"
 #include "Amber/Rendering/Mesh.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
 #include "Amber/Utilities/Logger.h"
 #include "ImageTextureLoader.h"

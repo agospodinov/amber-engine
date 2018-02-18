@@ -32,7 +32,7 @@ add_subdirectory(Physics)
 add_subdirectory(Rendering)
 add_subdirectory(Utilities)
 
-set(INCLUDED_OBJECTS Core IO Rendering Utilities)
+set(INCLUDED_OBJECTS Core IO Rendering RenderingBackends Utilities)
 
 if(OPENGL_FOUND)
     set(INCLUDED_OBJECTS ${INCLUDED_OBJECTS} OpenGL4)

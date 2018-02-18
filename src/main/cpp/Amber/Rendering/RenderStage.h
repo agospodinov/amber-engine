@@ -3,11 +3,9 @@
 
 #include <vector>
 
-#include "Amber/Rendering/IRenderTarget.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/IRenderTarget.h"
+#include "Amber/Rendering/Backend/Reference.h"
 #include "Amber/Rendering/ShaderPass.h"
-
-#include "Amber/Rendering/ForwardDeclarations.h"
 
 namespace Amber
 {

@@ -1,8 +1,8 @@
 #ifndef BINDLOCK_H
 #define BINDLOCK_H
 
-#include "Amber/Rendering/IBindable.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/IBindable.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

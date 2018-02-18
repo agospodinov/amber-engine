@@ -7,8 +7,8 @@
 
 #include <Eigen/Core>
 
-#include "Amber/Rendering/IProgram.h"
-#include "Amber/Rendering/Layout.h"
+#include "Amber/Rendering/Backend/IProgram.h"
+#include "Amber/Rendering/Backend/Layout.h"
 
 namespace Amber
 {

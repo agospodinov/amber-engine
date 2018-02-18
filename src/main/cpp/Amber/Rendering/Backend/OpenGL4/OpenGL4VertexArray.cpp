@@ -1,6 +1,6 @@
 #include "OpenGL4VertexArray.h"
 
-#include "Amber/Rendering/VertexTypes.h"
+#include "Amber/Rendering/Backend/VertexTypes.h"
 #include "OpenGL4Includes.h"
 #include "OpenGL4Buffer.h"
 

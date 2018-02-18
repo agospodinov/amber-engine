@@ -1,7 +1,7 @@
 #ifndef IBUFFER_H
 #define IBUFFER_H
 
-#include "Amber/Rendering/IMultiBindable.h"
+#include "Amber/Rendering/Backend/IMultiBindable.h"
 
 #include "Amber/Utilities/ScopedDataPointer.h"
 

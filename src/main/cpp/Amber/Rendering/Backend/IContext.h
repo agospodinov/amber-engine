@@ -3,10 +3,10 @@
 
 #include <memory>
 
-#include "Amber/Rendering/IBuffer.h"
-#include "Amber/Rendering/IShader.h"
-#include "Amber/Rendering/ITexture.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/IShader.h"
+#include "Amber/Rendering/Backend/ITexture.h"
 
 namespace Amber
 {

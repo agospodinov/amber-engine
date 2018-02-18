@@ -1,15 +1,14 @@
 #ifndef IRENDERTARGET_H
 #define IRENDERTARGET_H
 
-#include "Amber/Rendering/IBindable.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/IBindable.h"
+#include "Amber/Rendering/Backend/Reference.h"
+#include "Amber/Rendering/ForwardDeclarations.h"
 
 namespace Amber
 {
     namespace Rendering
     {
-        class ITexture;
-
         class IRenderTarget : public IBindable
         {
             public:

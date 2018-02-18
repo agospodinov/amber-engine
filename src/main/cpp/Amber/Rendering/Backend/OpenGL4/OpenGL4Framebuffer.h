@@ -1,8 +1,8 @@
 #ifndef OPENGL4FRAMEBUFFER_H
 #define OPENGL4FRAMEBUFFER_H
 
-#include "Amber/Rendering/IRenderTarget.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/IRenderTarget.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
 #include <cstdint>
 

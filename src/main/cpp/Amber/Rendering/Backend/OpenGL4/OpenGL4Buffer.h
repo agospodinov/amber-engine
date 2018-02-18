@@ -1,14 +1,14 @@
 #ifndef OPENGL4BUFFER_H
 #define OPENGL4BUFFER_H
 
-#include "Amber/Rendering/IBuffer.h"
-#include "Amber/Rendering/OpenGL4/OpenGL4Object.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Object.h"
 
 #include <functional>
 #include <utility>
 #include <vector>
 
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

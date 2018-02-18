@@ -1,7 +1,7 @@
 #ifndef OPENGL4OBJECT_H
 #define OPENGL4OBJECT_H
 
-#include "Amber/Rendering/OpenGL4/OpenGL4Includes.h"
+#include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 
 namespace Amber
 {

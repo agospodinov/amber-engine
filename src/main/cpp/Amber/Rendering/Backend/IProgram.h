@@ -1,7 +1,7 @@
 #ifndef IPROGRAM_H
 #define IPROGRAM_H
 
-#include "IBindable.h"
+#include "Amber/Rendering/Backend/IBindable.h"
 
 #include <cstdint>
 #include <memory>
@@ -9,9 +9,9 @@
 
 #include <Eigen/Core>
 
-#include "Amber/Rendering/Reference.h"
-
 #include "Amber/Rendering/ForwardDeclarations.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

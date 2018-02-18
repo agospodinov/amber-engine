@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "Amber/Rendering/ForwardDeclarations.h"
-#include "Amber/Rendering/IShader.h"
+#include "Amber/Rendering/Backend/Reference.h"
+#include "Amber/Rendering/Backend/IShader.h"
 
 namespace Amber
 {

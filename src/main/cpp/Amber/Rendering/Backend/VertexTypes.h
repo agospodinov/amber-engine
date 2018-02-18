@@ -2,9 +2,9 @@
 #define VERTEXTYPES_H
 
 #include "Amber/Utilities/ScopedDataPointer.h"
-#include "Amber/Rendering/IBuffer.h"
-#include "Amber/Rendering/Layout.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

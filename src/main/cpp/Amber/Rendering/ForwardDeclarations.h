@@ -12,22 +12,20 @@ namespace Amber
         class IContext;
         class IObject;
         class IProgram;
-        class IRenderable;
         class IRenderer;
         class IRenderTarget;
         class IShader;
         class ITexture;
-
         class BindLock;
-        class Camera;
         class Layout;
+
+        class Camera;
+        class Light;
         class Material;
         class Mesh;
-        class Model;
         class Procedure;
         class RenderStage;
         class ShaderPass;
-        class Skybox;
         class Viewport;
     }
 }

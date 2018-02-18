@@ -15,8 +15,8 @@
 #include <boost/mpl/vector.hpp>
 #undef int_p_NULL
 
-#include "Amber/Rendering/ITexture.h"
-#include "Amber/Rendering/Reference.h"
+#include "Amber/Rendering/Backend/ITexture.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

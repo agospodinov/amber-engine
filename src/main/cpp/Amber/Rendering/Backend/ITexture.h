@@ -1,7 +1,7 @@
 #ifndef ITEXTURE_H
 #define ITEXTURE_H
 
-#include "Amber/Rendering/IMultiBindable.h"
+#include "Amber/Rendering/Backend/IMultiBindable.h"
 
 #include <cstdint>
 #include <cstdlib>

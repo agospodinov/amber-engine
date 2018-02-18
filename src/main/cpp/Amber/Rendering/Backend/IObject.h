@@ -3,7 +3,9 @@
 
 #include <Eigen/Core>
 
-#include "Amber/Rendering/ForwardDeclarations.h"
+#include "Amber/Rendering/Backend/IBuffer.h"
+#include "Amber/Rendering/Backend/Layout.h"
+#include "Amber/Rendering/Backend/Reference.h"
 
 namespace Amber
 {

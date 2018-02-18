@@ -1,7 +1,7 @@
 #ifndef IMULTIBINDABLE_H
 #define IMULTIBINDABLE_H
 
-#include "Amber/Rendering/IBindable.h"
+#include "Amber/Rendering/Backend/IBindable.h"
 
 #include <cstdint>
 
