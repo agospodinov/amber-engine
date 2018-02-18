@@ -81,7 +81,7 @@ namespace Amber
                 }
             }
 
-            void OpenGL4Renderer::render(Core::Scene &scene)
+            void OpenGL4Renderer::render(Core::World &scene)
             {
                 glDepthMask(GL_TRUE);
                 glEnable(GL_ALPHA);

@@ -3,7 +3,7 @@
 
 #include <deque>
 
-#include "Amber/Core/Scene.h"
+#include "Amber/Core/World.h"
 #include "Amber/Rendering/Backend/Reference.h"
 #include "Amber/Rendering/ForwardDeclarations.h"
 
@@ -29,7 +29,7 @@ namespace Amber
                 virtual void prepare(Reference<ITexture> texture) = 0;
                 virtual void prepare(Reference<IRenderTarget> renderTarget) = 0;
 
-                virtual void render(Core::Scene &scene) = 0;
+                virtual void render(Core::World &scene) = 0;
                 virtual void render(IObject &renderable, Material &material) = 0;
 
                 virtual void clear() = 0;

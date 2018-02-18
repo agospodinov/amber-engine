@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Amber/Core/ISystem.h"
-#include "Amber/Core/Scene.h"
+#include "Amber/Core/World.h"
 #include "Amber/Utilities/Defines.h"
 
 namespace Amber
@@ -21,13 +21,13 @@ namespace Amber
                 const std::vector<std::unique_ptr<ISystem>> &getSystems() const;
                 void addSystem(std::unique_ptr<ISystem> system);
 
-                Scene &getScene();
-                const Scene &getScene() const;
-                void setScene(Scene scene);
+                World &getWorld();
+                const World &getWorld() const;
+                void setWorld(World world);
 
             private:
                 std::vector<std::unique_ptr<ISystem>> systems;
-                Scene scene;
+                World world;
         };
     }
 }

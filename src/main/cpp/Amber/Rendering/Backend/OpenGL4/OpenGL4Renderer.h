@@ -28,7 +28,7 @@ namespace Amber
                     virtual void prepare(Reference<ITexture> texture) override final;
                     virtual void prepare(Reference<IRenderTarget> renderTarget) override final;
 
-                    virtual void render(Core::Scene &scene) override final;
+                    virtual void render(Core::World &scene) override final;
                     virtual void render(IObject &object, Material &material) override final;
 
                     virtual void clear() override final;

@@ -26,7 +26,7 @@ namespace Amber
 
         void RenderingSystem::runSingleIteration()
         {
-            renderer->render(game->getScene());
+            renderer->render(game->getWorld());
         }
 
         void RenderingSystem::run()

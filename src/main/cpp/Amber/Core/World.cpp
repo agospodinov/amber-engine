@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "World.h"
 
 #include <functional>
 #include <memory>
@@ -7,18 +7,18 @@ namespace Amber
 {
     namespace Core
     {
-        Scene::Scene(std::vector<Entity> entities)
+        World::World(std::vector<Entity> entities)
             : entities(std::move(entities))
         {
         }
 
 
-        Scene::Scene(Scene &&other) noexcept
+        World::World(World &&other) noexcept
             : entities(std::move(other.entities))
         {
         }
 
-        Scene &Scene::operator =(Scene &&other) noexcept
+        World &World::operator =(World &&other) noexcept
         {
             if (this != &other)
             {
@@ -28,12 +28,12 @@ namespace Amber
             return *this;
         }
 
-        std::vector<Entity> &Scene::getEntities()
+        std::vector<Entity> &World::getEntities()
         {
             return entities;
         }
 
-        const std::vector<Entity> &Scene::getEntities() const
+        const std::vector<Entity> &World::getEntities() const
         {
             return entities;
         }

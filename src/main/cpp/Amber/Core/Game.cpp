@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include "Amber/Core/Scene.h"
-
 namespace Amber
 {
     namespace Core
@@ -16,21 +14,21 @@ namespace Amber
             this->systems.push_back(std::move(system));
         }
 
-        Scene &Game::getScene()
+        World &Game::getWorld()
         {
-            return scene;
+            return world;
         }
 
-        const Scene &Game::getScene() const
+        const World &Game::getWorld() const
         {
-            return scene;
+            return world;
         }
 
-        void Game::setScene(Scene scene)
+        void Game::setWorld(World scene)
         {
-            this->scene = std::move(scene);
+            this->world = std::move(scene);
 
-            for (Entity &entity : this->scene.entities)
+            for (Entity &entity : this->world.entities)
             {
                 for (const std::unique_ptr<ISystem> &system : systems)
                 {

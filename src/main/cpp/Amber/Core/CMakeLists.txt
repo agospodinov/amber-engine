@@ -2,7 +2,7 @@ set(CORE_LIB_SOURCES
     Game.cpp            Game.h
     Player.cpp          Player.h
     Round.cpp           Round.h
-    Scene.cpp           Scene.h
+    World.cpp           World.h
     Entity.cpp          Entity.h
     Transform.cpp       Transform.h
 
