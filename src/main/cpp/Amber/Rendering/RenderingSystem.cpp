@@ -3,6 +3,7 @@
 #include "Amber/Utilities/Config.h"
 
 #include "Amber/IO/ShaderLoader.h"
+#include "Amber/Rendering/IRenderingStrategy.h"
 #include "Amber/Rendering/Camera.h"
 #include "Amber/Rendering/Backend/OpenGL4/OpenGL4Renderer.h"
 
@@ -26,7 +27,7 @@ namespace Amber
 
         void RenderingSystem::runSingleIteration()
         {
-            renderer->render(game->getWorld());
+            renderingStrategy->render(scene, renderer.get());
         }
 
         void RenderingSystem::run()

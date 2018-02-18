@@ -11,6 +11,8 @@ set(RENDERING_LIB_SOURCES
     Viewport.cpp        Viewport.h
     RenderingSystem.cpp RenderingSystem.h
 
+    IRenderingStrategy.cpp  IRenderingStrategy.h
+
     ForwardDeclarations.h
 )
 
