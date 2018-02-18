@@ -9,6 +9,7 @@
 #include "Amber/Rendering/Backend/IRenderer.h"
 #include "Amber/Rendering/IRenderingStrategy.h"
 #include "Amber/Rendering/Scene.h"
+#include "Amber/Rendering/Viewport.h"
 
 namespace Amber
 {
@@ -27,10 +28,11 @@ namespace Amber
 
                 virtual void registerEntity(Core::Entity &entity) override;
 
-                void handleWindowResize(int width, int height);
+                Viewport &getViewport();
 
             private:
                 Scene scene;
+                Viewport viewport;
                 std::unique_ptr<IRenderer> renderer;
                 std::unique_ptr<IRenderingStrategy> renderingStrategy;
                 Core::Game *game;

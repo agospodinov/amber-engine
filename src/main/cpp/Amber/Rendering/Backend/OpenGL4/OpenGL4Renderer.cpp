@@ -192,11 +192,6 @@ namespace Amber
                 return context;
             }
 
-            Viewport &OpenGL4Renderer::getViewport()
-            {
-                return viewport;
-            }
-
             GLenum OpenGL4Renderer::getRenderOptionId(IRenderer::RenderOption renderOption) const
             {
                 switch (renderOption)

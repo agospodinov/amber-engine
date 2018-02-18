@@ -38,7 +38,6 @@ namespace Amber
                 virtual void setRenderOption(RenderOption renderOption, bool enabled) = 0;
 
                 virtual IContext &getContext() = 0;
-                virtual Viewport &getViewport() = 0;
         };
     }
 }

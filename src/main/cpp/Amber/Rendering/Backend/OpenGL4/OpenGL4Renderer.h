@@ -6,7 +6,6 @@
 #include <deque>
 
 #include "Amber/Rendering/ForwardDeclarations.h"
-#include "Amber/Rendering/Viewport.h"
 #include "Amber/Rendering/Backend/OpenGL4/OpenGL4Includes.h"
 #include "Amber/Rendering/Backend/OpenGL4/OpenGL4Context.h"
 
@@ -36,13 +35,11 @@ namespace Amber
                     virtual void setRenderOption(RenderOption renderOption, bool enabled) override final;
 
                     virtual IContext &getContext() override final;
-                    virtual Viewport &getViewport() override final;
 
                 private:
                     GLenum getRenderOptionId(IRenderer::RenderOption renderOption) const;
 
                     OpenGL4Context context;
-                    Viewport viewport;
             };
         }
     }

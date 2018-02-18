@@ -43,9 +43,9 @@ namespace Amber
             registerProxy<Light, Core::Transform>(entity, [=] (auto p) { scene.addLight(p); });
         }
 
-        void RenderingSystem::handleWindowResize(int width, int height)
+        Viewport &RenderingSystem::getViewport()
         {
-            renderer->getViewport().resize(width, height);
+            return viewport;
         }
     }
 }
