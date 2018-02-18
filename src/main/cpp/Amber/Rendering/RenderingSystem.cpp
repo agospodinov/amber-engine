@@ -38,9 +38,9 @@ namespace Amber
         {
             registerProxy<Mesh, Material, Core::Transform>(entity, [=] (auto p) {
                 renderer->prepare(*p.template get<Mesh>());
-                meshes.push_back(p);
+                scene.addMesh(p);
             });
-            registerProxy<Light, Core::Transform>(entity, [=] (auto p) { lights.push_back(p); });
+            registerProxy<Light, Core::Transform>(entity, [=] (auto p) { scene.addLight(p); });
         }
 
         void RenderingSystem::handleWindowResize(int width, int height)

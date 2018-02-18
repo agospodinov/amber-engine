@@ -3,6 +3,7 @@ set(RENDERING_LIB_SOURCES
     Mesh.cpp            Mesh.h
     Material.cpp        Material.h
     Light.cpp           Light.h
+    Scene.cpp           Scene.h
 
     Procedure.cpp       Procedure.h
     RenderStage.cpp     RenderStage.h
